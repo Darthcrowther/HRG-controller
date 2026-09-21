@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HMCTS Hearing Controller</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#f3f2f1;
+    font-family:Arial,sans-serif;
+    text-align:center;
+}
+
+.header{
+    background:#003078;
+    color:white;
+    padding:25px;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.panel{
+    background:white;
+    width:700px;
+    margin:40px auto;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.info{
+    font-size:22px;
+    margin:15px;
+}
+
+.status{
+    font-size:22px;
+    margin-top:25px;
+    color:#003078;
+    font-weight:bold;
+}
+
+button{
+
+    width:420px;
+    height:90px;
+
+    font-size:28px;
+    font-weight:bold;
+
+    border:none;
+    border-radius:8px;
+
+    cursor:pointer;
+
+    color:white;
+
+    margin:15px;
+}
+
+.start{
+    background:#005ea5;
+}
+
+.start:hover{
+    background:#003078;
+}
+
+.end{
+    background:#d4351c;
+}
+
+.end:hover{
+    background:#b10e1e;
+}
+
+.value{
+    color:#003078;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+HMCTS HEARING CONTROLLER
+</div>
+
+<div class="panel">
+
+<div class="info">
+<b>Site</b>
+<br><br>
+<span id="siteValue" class="value">
+Not Supplied
+</span>
+</div>
+
+<div class="info">
+<b>Connection Type</b>
+<br><br>
+<span id="typeValue" class="value">
+Not Supplied
+</span>
+</div>
+
+<div class="info">
+<b>Room</b>
+<br><br>
+<span id="roomValue" class="value">
+Not Supplied
+</span>
+</div>
+
+<div class="info">
+<b>Cloud Room</b>
+<br><br>
+<span id="cloudValue" class="value">
+Not Supplied
+</span>
+</div>
+
+<div class="status" id="status">
+READY
+</div>
+
+<button
+class="start"
+onclick="startHearing()">
+
+START HEARING
+
+</button>
+
+<br>
+
+<button
+class="end"
+onclick="endHearing()">
+
+END HEARING
+
+</button>
+
+</div>
+
+<script>
+
+// ================================
+// READ VALUES FROM POWER APPS
+// ================================
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const site =
+params.get("site");
+
+const type =
+params.get("type");
+
+const room =
+params.get("room");
+
+const cloudRoom =
+params.get("cloudroom");
+
+const meetingURL =
+params.get("url");
+
+let hearingWindow = null;
+
+// ================================
+// DISPLAY VALUES
+// ================================
+
+document.getElementById(
+    "siteValue"
+).innerHTML =
+site || "Not Supplied";
+
+document.getElementById(
+    "typeValue"
+).innerHTML =
+type || "Not Supplied";
+
+document.getElementById(
+    "roomValue"
+).innerHTML =
+room || "Not Supplied";
+
+document.getElementById(
+    "cloudValue"
+).innerHTML =
+cloudRoom || "Not Supplied";
+
+// ================================
+// START HEARING
+// ================================
+
+function startHearing(){
+
+    if(!meetingURL){
+
+        alert(
+            "No Meeting URL supplied from Power Apps."
+        );
+
+        return;
+
+    }
+
+    document.getElementById(
+        "status"
+    ).innerHTML =
+
+    "OPENING HEARING..." +
+
+    "<br><br>" +
+
+    "Automa should:" +
+
+    "<br>" +
+
+    "✓ Click CLICK TO JOIN" +
+
+    "<br>" +
+
+    "✓ Stop at HOST / GUEST";
+
+    hearingWindow =
+    window.open(
+        meetingURL,
+        "_blank"
+    );
+
+}
+
+// ================================
+// END HEARING
+// ================================
+
+function endHearing(){
+
+    if(
+        confirm(
+            "End Hearing?"
+        )
+    ){
+
+        if(
+            hearingWindow &&
+            !hearingWindow.closed
+        ){
+
+            hearingWindow.close();
+
+        }
+
+        document.getElementById(
+            "status"
+        ).innerHTML =
+        "READY";
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
