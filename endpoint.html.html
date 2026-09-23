@@ -134,7 +134,7 @@ document
 
     });
 
-async function checkForCommand(){
+function checkForCommand(){
 
     if(!automationArmed){
         return;
@@ -143,26 +143,24 @@ async function checkForCommand(){
     statusDiv.innerHTML =
         "CHECKING FOR COMMAND";
 
-    try{
+    fetch(
+        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
+        Date.now()
+    )
+    .then(response => response.text())
+    .then(command => {
 
-        const response =
-            await fetch(
-                "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
-                Date.now()
-            );
-
-        const command =
-            (await response.text()).trim();
+        command = command.trim();
 
         statusDiv.innerHTML =
             "COMMAND: " + command;
 
-    }
-    catch(error){
+    })
+    .catch(() => {
 
         statusDiv.innerHTML =
-            "COMMAND CHECK FAILED";
+            "COMMAND FILE ERROR";
 
-    }
+    });
 
 }
