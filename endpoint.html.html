@@ -3,67 +3,37 @@
 let automationArmed = false;
 
 function armAutomation() {
-
     automationArmed = true;
-
-    alert("AUTOMATION ARMED");
-
     document.getElementById("status").innerHTML =
         "WAITING FOR COMMAND";
-
 }
 
 function disarmAutomation() {
-
     automationArmed = false;
-
     document.getElementById("status").innerHTML =
         "READY";
-
 }
 
-async function checkForCommand() {
+setInterval(function(){
 
-    if (!automationArmed) {
-        return;
-    }
-
-    try {
+    if(automationArmed){
 
         document.getElementById("status").innerHTML =
             "CHECKING FOR COMMAND";
 
-        const response = await fetch(
-            "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
-            Date.now()
-        );
+        setTimeout(function(){
 
-        const command = (await response.text()).trim();
+            if(automationArmed){
 
-        if (command === "JOIN") {
+                document.getElementById("status").innerHTML =
+                    "WAITING FOR COMMAND";
 
-            document.getElementById("status").innerHTML =
-                "JOIN COMMAND RECEIVED";
+            }
 
-        } else {
-
-            document.getElementById("status").innerHTML =
-                "WAITING FOR COMMAND";
-
-        }
-
-    }
-    catch (error) {
-
-        document.getElementById("status").innerHTML =
-            "COMMAND CHECK FAILED";
-
-        console.log(error);
+        },2000);
 
     }
 
-}
-
-setInterval(checkForCommand, 5000);
+},5000);
 
 </script>
