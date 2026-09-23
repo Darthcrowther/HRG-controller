@@ -136,23 +136,42 @@ statusDiv.innerHTML =
 
 function checkForCommand(){
 
-if(!automationArmed){
-return;
-}
+    if(!automationArmed){
+        return;
+    }
 
-statusDiv.innerHTML =
-"CHECKING FOR COMMAND";
+    statusDiv.innerHTML =
+        "CHECKING FOR COMMAND";
 
-setTimeout(function(){
+    fetch(
+        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
+        Date.now()
+    )
+    .then(response => response.text())
+    .then(command => {
 
-if(automationArmed){
+        command = command.trim();
 
-statusDiv.innerHTML =
-"WAITING FOR COMMAND";
+        if(command === "JOIN"){
 
-}
+            statusDiv.innerHTML =
+                "JOIN COMMAND RECEIVED";
 
-},2000);
+        }
+        else{
+
+            statusDiv.innerHTML =
+                "WAITING FOR COMMAND";
+
+        }
+
+    })
+    .catch(() => {
+
+        statusDiv.innerHTML =
+            "COMMAND FILE ERROR";
+
+    });
 
 }
 
