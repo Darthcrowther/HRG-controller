@@ -1,5 +1,7 @@
 <script>
 
+alert("SCRIPT LOADED");
+
 let automationArmed = false;
 
 function armAutomation() {
@@ -19,46 +21,5 @@ function disarmAutomation() {
         "READY";
 
 }
-
-async function checkForCommand() {
-
-    if (!automationArmed) {
-        return;
-    }
-
-    try {
-
-        const response =
-            await fetch(
-                "https://darthcrowther.github.io/HRG-controller/command.txt?" +
-                Date.now()
-            );
-
-        const command =
-            (await response.text()).trim();
-
-        if (command === "JOIN") {
-
-            document.getElementById("status").innerHTML =
-                "JOIN COMMAND RECEIVED";
-
-        } else {
-
-            document.getElementById("status").innerHTML =
-                "WAITING FOR COMMAND";
-
-        }
-
-    }
-    catch {
-
-        document.getElementById("status").innerHTML =
-            "COMMAND CHECK FAILED";
-
-    }
-
-}
-
-setInterval(checkForCommand, 5000);
 
 </script>
