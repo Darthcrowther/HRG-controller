@@ -204,7 +204,6 @@ cloudRoom || "Not Supplied";
 // ================================
 // START HEARING
 // ================================
-
 function startHearing(){
 
     if(!meetingURL){
@@ -222,6 +221,20 @@ function startHearing(){
         meetingURL,
         "_blank"
     );
+
+    document.getElementById(
+        "status"
+    ).innerHTML =
+
+    "OPENING HEARING..." +
+
+    "<br><br>" +
+
+    "RUN AUTOMA" +
+
+    "<br><br>" +
+
+    "WAITING FOR HOST / GUEST";
 
 }
 
