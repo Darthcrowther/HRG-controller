@@ -153,23 +153,10 @@ function checkForCommand(){
         const action = parts[1];
         const meetingURL = parts[2];
 
-if(
-    endpoint === "EP-001" &&
-    action === "JOIN"
-){
-
-    statusDiv.innerHTML =
-        "JOIN COMMAND RECEIVED";
-
-    console.log(meetingURL);
-
-}
-
-    statusDiv.innerHTML =
-        "JOIN COMMAND RECEIVED<br><br>" +
-        meetingURL;
-
-}
+        if(
+            endpoint === "EP-001" &&
+            action === "JOIN"
+        ){
 
             statusDiv.innerHTML =
                 "JOIN COMMAND RECEIVED";
@@ -193,7 +180,6 @@ if(
     });
 
 }
-
 setInterval(function(){
 
     checkForCommand();
