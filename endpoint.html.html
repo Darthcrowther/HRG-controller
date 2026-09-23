@@ -147,12 +147,24 @@ function checkForCommand(){
     .then(response => response.text())
     .then(command => {
 
-        if(command.trim().toUpperCase() === "JOIN"){
+        const parts = command.trim().split("|");
+
+        const endpoint = parts[0];
+        const action = parts[1];
+        const meetingURL = parts[2];
+
+        if(
+            endpoint === "EP-001" &&
+            action === "JOIN"
+        ){
 
             statusDiv.innerHTML =
                 "JOIN COMMAND RECEIVED";
 
-        } else {
+            window.meetingURL = meetingURL;
+
+        }
+        else{
 
             statusDiv.innerHTML =
                 "WAITING FOR COMMAND";
@@ -168,10 +180,6 @@ function checkForCommand(){
     });
 
 }
-
-setInterval(function(){
-
-checkForCommand();
 
 },5000);
 
