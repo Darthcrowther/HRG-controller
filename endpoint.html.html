@@ -20,26 +20,28 @@ function disarmAutomation() {
 
 }
 
-setInterval(function() {
+function checkForCommand() {
 
-    if (automationArmed) {
-
-        document.getElementById("status").innerHTML =
-            "CHECKING FOR COMMAND";
-
-        setTimeout(function() {
-
-            if (automationArmed) {
-
-                document.getElementById("status").innerHTML =
-                    "WAITING FOR COMMAND";
-
-            }
-
-        }, 2000);
-
+    if (!automationArmed) {
+        return;
     }
 
-}, 5000);
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
+
+    setTimeout(function () {
+
+        if (automationArmed) {
+
+            document.getElementById("status").innerHTML =
+                "WAITING FOR COMMAND";
+
+        }
+
+    }, 2000);
+
+}
+
+setInterval(checkForCommand, 5000);
 
 </script>
