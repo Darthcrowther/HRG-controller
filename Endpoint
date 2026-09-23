@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HMCTS Endpoint Controller</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f3f2f1;
+    text-align:center;
+}
+
+.header{
+    background:#003078;
+    color:white;
+    padding:25px;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.panel{
+    background:white;
+    width:700px;
+    margin:50px auto;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+.endpoint{
+    font-size:28px;
+    font-weight:bold;
+    color:#003078;
+    margin-bottom:20px;
+}
+
+.status{
+    font-size:24px;
+    font-weight:bold;
+    margin:20px;
+    color:#00703c;
+}
+
+button{
+    width:400px;
+    height:80px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-size:24px;
+    font-weight:bold;
+    margin:15px;
+    cursor:pointer;
+}
+
+.arm{
+    background:#00703c;
+}
+
+.disarm{
+    background:#d4351c;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+HMCTS ENDPOINT CONTROLLER
+</div>
+
+<div class="panel">
+
+<div class="endpoint">
+
+Endpoint: EP-001
+
+</div>
+
+<div id="status" class="status">
+
+READY
+
+</div>
+
+<button
+class="arm"
+onclick="armAutomation()">
+
+ARM AUTOMATION
+
+</button>
+
+<br>
+
+<button
+class="disarm"
+onclick="disarmAutomation()">
+
+DISARM
+
+</button>
+
+</div>
+
+<script>
+
+let automationArmed = false;
+
+function armAutomation(){
+
+    automationArmed = true;
+
+    document.getElementById(
+        "status"
+    ).innerHTML =
+    "WAITING FOR COMMAND";
+
+}
+
+function disarmAutomation(){
+
+    automationArmed = false;
+
+    document.getElementById(
+        "status"
+    ).innerHTML =
+    "READY";
+
+}
+
+</script>
+
+</body>
+</html>
