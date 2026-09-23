@@ -140,9 +140,6 @@ function checkForCommand(){
         return;
     }
 
-    statusDiv.innerHTML =
-        "CHECKING FOR COMMAND";
-
     fetch(
         "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
         Date.now()
@@ -150,15 +147,12 @@ function checkForCommand(){
     .then(response => response.text())
     .then(command => {
 
-        command = command.trim();
-
-        if(command === "JOIN"){
+        if(command.trim().toUpperCase() === "JOIN"){
 
             statusDiv.innerHTML =
                 "JOIN COMMAND RECEIVED";
 
-        }
-        else{
+        } else {
 
             statusDiv.innerHTML =
                 "WAITING FOR COMMAND";
