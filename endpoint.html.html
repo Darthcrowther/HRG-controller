@@ -9,6 +9,8 @@ function armAutomation() {
     document.getElementById("status").innerHTML =
         "WAITING FOR COMMAND";
 
+    alert("AUTOMATION ARMED");
+
 }
 
 function disarmAutomation() {
@@ -38,12 +40,16 @@ function checkForCommand() {
 
         }
 
-    }, 2000);
+    }, 4000);
 
 }
 
-/* Check every 30 seconds */
+/* TEST EVERY 5 SECONDS */
 
-setInterval(checkForCommand, 30000);
+setInterval(function () {
+
+    checkForCommand();
+
+}, 5000);
 
 </script>
