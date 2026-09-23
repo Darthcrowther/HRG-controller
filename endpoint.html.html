@@ -20,25 +20,41 @@ function disarmAutomation() {
 
 }
 
-function checkForCommand() {
+async function checkForCommand() {
 
     if (!automationArmed) {
         return;
     }
 
-    document.getElementById("status").innerHTML =
-        "CHECKING FOR COMMAND";
+    try {
 
-    setTimeout(function () {
+        const response = await fetch(
+            "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
+            Date.now()
+        );
 
-        if (automationArmed) {
+        const command = (await response.text()).trim();
+
+        if (command === "JOIN") {
+
+            document.getElementById("status").innerHTML =
+                "JOIN COMMAND RECEIVED";
+
+        } else {
 
             document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
 
         }
 
-    }, 2000);
+    } catch (error) {
+
+        document.getElementById("status").innerHTML =
+            "COMMAND CHECK FAILED";
+
+        console.log(error);
+
+    }
 
 }
 
