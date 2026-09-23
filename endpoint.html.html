@@ -35,7 +35,6 @@ body{
     font-size:28px;
     color:#003078;
     font-weight:bold;
-    margin-bottom:20px;
 }
 
 .status{
@@ -61,16 +60,8 @@ button{
     background:#00703c;
 }
 
-.arm:hover{
-    background:#005a30;
-}
-
 .disarm{
     background:#d4351c;
-}
-
-.disarm:hover{
-    background:#b10e1e;
 }
 
 </style>
@@ -93,17 +84,13 @@ Endpoint: EP-001
 READY
 </div>
 
-<button
-class="arm"
-onclick="armAutomation()">
+<button class="arm" id="armBtn">
 ARM AUTOMATION
 </button>
 
 <br>
 
-<button
-class="disarm"
-onclick="disarmAutomation()">
+<button class="disarm" id="disarmBtn">
 DISARM
 </button>
 
@@ -111,46 +98,29 @@ DISARM
 
 <script>
 
-let automationArmed = false;
+const statusDiv =
+    document.getElementById("status");
 
-function armAutomation() {
+document
+    .getElementById("armBtn")
+    .addEventListener("click", function(){
 
-    automationArmed = true;
+        statusDiv.innerHTML =
+            "WAITING FOR COMMAND";
 
-    document.getElementById("status").innerHTML =
-        "WAITING FOR COMMAND";
+    });
 
-}
+document
+    .getElementById("disarmBtn")
+    .addEventListener("click", function(){
 
-function disarmAutomation() {
+        statusDiv.innerHTML =
+            "READY";
 
-    automationArmed = false;
+    });
 
-    document.getElementById("status").innerHTML =
-        "READY";
+</script>
 
-}
+</body>
 
-function checkForCommand() {
-
-    if (!automationArmed) {
-        return;
-    }
-
-    document.getElementById("status").innerHTML =
-        "CHECKING FOR COMMAND";
-
-    setTimeout(function () {
-
-        if (automationArmed) {
-
-            document.getElementById("status").innerHTML =
-                "WAITING FOR COMMAND";
-
-        }
-
-    }, 4000);
-
-}
-
-setInterval(function () 
+</html>
