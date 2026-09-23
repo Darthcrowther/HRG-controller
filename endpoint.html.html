@@ -3,37 +3,43 @@
 let automationArmed = false;
 
 function armAutomation() {
+
     automationArmed = true;
+
     document.getElementById("status").innerHTML =
         "WAITING FOR COMMAND";
+
 }
 
 function disarmAutomation() {
+
     automationArmed = false;
+
     document.getElementById("status").innerHTML =
         "READY";
+
 }
 
-setInterval(function(){
+setInterval(function() {
 
-    if(automationArmed){
+    if (automationArmed) {
 
         document.getElementById("status").innerHTML =
             "CHECKING FOR COMMAND";
 
-        setTimeout(function(){
+        setTimeout(function() {
 
-            if(automationArmed){
+            if (automationArmed) {
 
                 document.getElementById("status").innerHTML =
                     "WAITING FOR COMMAND";
 
             }
 
-        },2000);
+        }, 2000);
 
     }
 
-},5000);
+}, 5000);
 
 </script>
