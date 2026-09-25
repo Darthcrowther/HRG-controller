@@ -112,6 +112,7 @@ DISARM
 <script>
 
 let automationArmed = false;
+    const endpointID = "EP-001";
 
 const statusDiv =
 document.getElementById("status");
@@ -157,7 +158,7 @@ function checkForCommand(){
         const action = parts[1];
         const meetingURL = parts[2];
 if(
-    endpoint === "EP-001" &&
+    endpoint === endpointID &&
     action === "JOIN"
 ){
 
