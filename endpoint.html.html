@@ -147,58 +147,16 @@ function checkForCommand() {
     document.getElementById("status").innerHTML =
         "CHECKING FOR COMMAND";
 
-    fetch(
-        "https://gist.githubusercontent.com/Darthcrowther/50c02ceceb43ffe319897e83fdc7aec7/raw/d89cc7b2c4c725b2cb7e15b9838e41f007e89734/hearing-command.txt?nocache=" +
-        Date.now()
-    )
-    .then(response => response.text())
-    .then(command => {
+    setTimeout(function () {
 
-        const value = command.trim();
-
-        if(value === "NONE"){
+        if (automationArmed) {
 
             document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
 
-            document.getElementById("urlDisplay").innerHTML =
-                "NO URL RECEIVED";
-
-        }
-        else if(value.startsWith("JOIN|")){
-
-            const meetingURL =
-                value.split("|")[1];
-
-            document.getElementById("status").innerHTML =
-                "HEARING REQUEST RECEIVED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                meetingURL;
-
-            window.meetingURL =
-                meetingURL;
-
-        }
-        else if(value === "END"){
-
-            document.getElementById("status").innerHTML =
-                "REQUEST CANCELLED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                "NO URL RECEIVED";
-
         }
 
-    })
-    .catch(() => {
-
-        document.getElementById("status").innerHTML =
-            "COMMAND CHECK FAILED";
-
-    });
-
-}
+    }, 4000);
 
 }
 
