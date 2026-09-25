@@ -140,26 +140,71 @@ document.getElementById("urlDisplay").innerHTML =
 
 function checkForCommand() {
 
-if (!automationArmed) {
-return;
+    if (!automationArmed) {
+        return;
+    }
+
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
+
+    fetch(
+        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
+        Date.now()
+    )
+    .then(response => response.text())
+    .then(command => {
+
+        const parts = command.trim().split("|");
+
+        const endpoint = parts[0];
+        const action = parts[1];
+        const meetingURL = parts[2] || "";
+
+        if (
+            endpoint === "EP-001" &&
+            action === "JOIN"
+        ) {
+
+            document.getElementById("status").innerHTML =
+                "HEARING REQUEST RECEIVED";
+
+            document.getElementById("urlDisplay").innerHTML =
+                meetingURL;
+
+            window.meetingURL = meetingURL;
+
+        }
+        else if (
+            endpoint === "EP-001" &&
+            action === "END"
+        ) {
+
+            document.getElementById("status").innerHTML =
+                "REQUEST CANCELLED";
+
+            document.getElementById("urlDisplay").innerHTML =
+                "NO URL RECEIVED";
+
+        }
+        else {
+
+            document.getElementById("status").innerHTML =
+                "WAITING FOR COMMAND";
+
+            document.getElementById("urlDisplay").innerHTML =
+                "NO URL RECEIVED";
+
+        }
+
+    })
+    .catch(() => {
+
+        document.getElementById("status").innerHTML =
+            "COMMAND FILE ERROR";
+
+    });
+
 }
-
-document.getElementById("status").innerHTML =
-"CHECKING FOR COMMAND";
-
-setTimeout(function () {
-
-if (automationArmed) {
-
-document.getElementById("status").innerHTML =
-"WAITING FOR COMMAND";
-
-}
-
-}, 4000);
-
-}
-
 setInterval(function () {
 
 checkForCommand();
