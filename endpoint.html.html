@@ -93,14 +93,22 @@ Endpoint: EP-001
 READY
 </div>
 
-<button class="arm" id="armBtn">
-ARM AUTOMATION
+<div id="urlDisplay" class="status">
+NO URL RECEIVED
+</div>
+
+<button
+class="arm"
+onclick="armAutomation()">
+LAUNCH HEARING
 </button>
 
 <br>
 
-<button class="disarm" id="disarmBtn">
-DISARM
+<button
+class="disarm"
+onclick="disarmAutomation()">
+CANCEL REQUEST
 </button>
 
 </div>
@@ -109,58 +117,54 @@ DISARM
 
 let automationArmed = false;
 
-const statusDiv =
-document.getElementById("status");
-
-document
-.getElementById("armBtn")
-.addEventListener("click", function(){
+function armAutomation() {
 
 automationArmed = true;
 
-statusDiv.innerHTML =
+document.getElementById("status").innerHTML =
 "WAITING FOR COMMAND";
 
-});
+}
 
-document
-.getElementById("disarmBtn")
-.addEventListener("click", function(){
+function disarmAutomation() {
 
 automationArmed = false;
 
-statusDiv.innerHTML =
+document.getElementById("status").innerHTML =
 "READY";
 
-});
+document.getElementById("urlDisplay").innerHTML =
+"NO URL RECEIVED";
 
-function checkForCommand(){
+}
 
-if(!automationArmed){
+function checkForCommand() {
+
+if (!automationArmed) {
 return;
 }
 
-statusDiv.innerHTML =
+document.getElementById("status").innerHTML =
 "CHECKING FOR COMMAND";
 
-setTimeout(function(){
+setTimeout(function () {
 
-if(automationArmed){
+if (automationArmed) {
 
-statusDiv.innerHTML =
+document.getElementById("status").innerHTML =
 "WAITING FOR COMMAND";
 
 }
 
-},2000);
+}, 4000);
 
 }
 
-setInterval(function(){
+setInterval(function () {
 
 checkForCommand();
 
-},5000);
+}, 5000);
 
 </script>
 
