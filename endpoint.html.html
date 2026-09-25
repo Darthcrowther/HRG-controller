@@ -8,69 +8,69 @@
 <style>
 
 body{
-margin:0;
-background:#f3f2f1;
-font-family:Arial,sans-serif;
-text-align:center;
+    margin:0;
+    background:#f3f2f1;
+    font-family:Arial,sans-serif;
+    text-align:center;
 }
 
 .header{
-background:#003078;
-color:white;
-padding:25px;
-font-size:32px;
-font-weight:bold;
+    background:#003078;
+    color:white;
+    padding:25px;
+    font-size:32px;
+    font-weight:bold;
 }
 
 .panel{
-background:white;
-width:700px;
-margin:40px auto;
-padding:30px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
+    background:white;
+    width:700px;
+    margin:40px auto;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 .endpoint{
-font-size:28px;
-color:#003078;
-font-weight:bold;
-margin-bottom:20px;
+    font-size:28px;
+    color:#003078;
+    font-weight:bold;
+    margin-bottom:20px;
 }
 
 .status{
-font-size:24px;
-margin:25px;
-color:#003078;
-font-weight:bold;
+    font-size:24px;
+    margin:25px;
+    color:#003078;
+    font-weight:bold;
 }
 
 button{
-width:420px;
-height:90px;
-border:none;
-border-radius:8px;
-font-size:26px;
-font-weight:bold;
-cursor:pointer;
-color:white;
-margin:15px;
+    width:420px;
+    height:90px;
+    border:none;
+    border-radius:8px;
+    font-size:26px;
+    font-weight:bold;
+    cursor:pointer;
+    color:white;
+    margin:15px;
 }
 
 .arm{
-background:#00703c;
+    background:#00703c;
 }
 
 .arm:hover{
-background:#005a30;
+    background:#005a30;
 }
 
 .disarm{
-background:#d4351c;
+    background:#d4351c;
 }
 
 .disarm:hover{
-background:#b10e1e;
+    background:#b10e1e;
 }
 
 </style>
@@ -98,13 +98,13 @@ NO URL RECEIVED
 </div>
 
 <button class="arm" id="armBtn">
-ARM AUTOMATION
+LAUNCH HEARING
 </button>
 
 <br>
 
 <button class="disarm" id="disarmBtn">
-DISARM
+CANCEL REQUEST
 </button>
 
 </div>
@@ -112,32 +112,31 @@ DISARM
 <script>
 
 let automationArmed = false;
-    const endpointID = "EP-001";
 
 const statusDiv =
-document.getElementById("status");
+    document.getElementById("status");
 
 document
-.getElementById("armBtn")
-.addEventListener("click", function(){
+    .getElementById("armBtn")
+    .addEventListener("click", function(){
 
-automationArmed = true;
+        automationArmed = true;
 
-statusDiv.innerHTML =
-"WAITING FOR COMMAND";
+        statusDiv.innerHTML =
+            "WAITING FOR COMMAND";
 
-});
+    });
 
 document
-.getElementById("disarmBtn")
-.addEventListener("click", function(){
+    .getElementById("disarmBtn")
+    .addEventListener("click", function(){
 
-automationArmed = false;
+        automationArmed = false;
 
-statusDiv.innerHTML =
-"READY";
+        statusDiv.innerHTML =
+            "READY";
 
-});
+    });
 
 function checkForCommand(){
 
@@ -157,40 +156,43 @@ function checkForCommand(){
         const endpoint = parts[0];
         const action = parts[1];
         const meetingURL = parts[2];
-if(
-    endpoint === "EP-001" &&
-    action === "JOIN"
-){
 
-    statusDiv.innerHTML =
-        "JOIN COMMAND RECEIVED";
+        if(
+            endpoint === "EP-001" &&
+            action === "JOIN"
+        ){
 
-    window.meetingURL = meetingURL;
+            statusDiv.innerHTML =
+                "HEARING REQUEST RECEIVED";
 
-    document.getElementById("urlDisplay").innerHTML =
-        meetingURL;
+            window.meetingURL =
+                meetingURL;
 
-}
-else if(
-    endpoint === "EP-001" &&
-    action === "END"
-){
+            document.getElementById("urlDisplay").innerHTML =
+                meetingURL;
 
-    statusDiv.innerHTML =
-        "END COMMAND RECEIVED";
+        }
+        else if(
+            endpoint === "EP-001" &&
+            action === "END"
+        ){
 
-}
+            statusDiv.innerHTML =
+                "REQUEST CANCELLED";
 
-    document.getElementById("urlDisplay").innerHTML =
-        "";
+            document.getElementById("urlDisplay").innerHTML =
+                "";
 
-}
-else{
+        }
+        else{
 
-    statusDiv.innerHTML =
-        "WAITING FOR COMMAND";
+            statusDiv.innerHTML =
+                "WAITING FOR COMMAND";
 
-}
+            document.getElementById("urlDisplay").innerHTML =
+                "NO URL RECEIVED";
+
+        }
 
     })
     .catch(() => {
@@ -201,43 +203,10 @@ else{
     });
 
 }
-    function checkForEndCommand(){
 
-    if(!automationArmed){
-        return;
-    }
-
-    fetch(
-        "https://darthcrowther.github.io/HRG-controller/end.txt?nocache=" +
-        Date.now()
-    )
-    .then(response => response.text())
-    .then(command => {
-
-        command = command.trim();
-
-        if(command === "END"){
-
-            statusDiv.innerHTML =
-                "END COMMAND RECEIVED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                "";
-
-        }
-
-    })
-    .catch(() => {
-
-        console.log("End file check failed");
-
-    });
-
-}
 setInterval(function(){
 
     checkForCommand();
-    checkForEndCommand();
 
 },5000);
 
