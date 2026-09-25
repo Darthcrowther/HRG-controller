@@ -43,7 +43,6 @@ body{
     margin:25px;
     color:#003078;
     font-weight:bold;
-    word-break:break-word;
 }
 
 button{
@@ -98,13 +97,17 @@ READY
 NO URL RECEIVED
 </div>
 
-<button class="arm" id="armBtn">
+<button
+class="arm"
+onclick="armAutomation()">
 LAUNCH HEARING
 </button>
 
 <br>
 
-<button class="disarm" id="disarmBtn">
+<button
+class="disarm"
+onclick="disarmAutomation()">
 CANCEL REQUEST
 </button>
 
@@ -114,117 +117,54 @@ CANCEL REQUEST
 
 let automationArmed = false;
 
-const statusDiv =
-    document.getElementById("status");
+function armAutomation() {
 
-const urlDisplay =
-    document.getElementById("urlDisplay");
+    automationArmed = true;
 
-document
-    .getElementById("armBtn")
-    .addEventListener("click", function(){
-
-        automationArmed = true;
-
-        statusDiv.innerHTML =
-            "WAITING FOR COMMAND";
-
-    });
-
-document
-    .getElementById("disarmBtn")
-    .addEventListener("click", function(){
-
-        automationArmed = false;
-
-        statusDiv.innerHTML =
-            "READY";
-
-        urlDisplay.innerHTML =
-            "NO URL RECEIVED";
-
-    });
-
-function checkForCommand(){
-
-    if(!automationArmed){
-        return;
-    }
-
-    statusDiv.innerHTML =
-        "CHECKING FOR COMMAND";
-
-    fetch(
-        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
-        Date.now()
-    )
-    .then(response => response.text())
-    .then(command => {
-
-        const parts =
-            command.trim().split("|");
-
-        const endpoint =
-            parts[0];
-
-        const action =
-            parts[1];
-
-        const meetingURL =
-            parts[2] || "";
-
-        if(
-            endpoint === "EP-001" &&
-            action === "JOIN"
-        ){
-
-            statusDiv.innerHTML =
-                "HEARING REQUEST RECEIVED";
-
-            urlDisplay.innerHTML =
-                meetingURL;
-
-            window.meetingURL =
-                meetingURL;
-
-        }
-        else if(
-            endpoint === "EP-001" &&
-            action === "END"
-        ){
-
-            statusDiv.innerHTML =
-                "REQUEST CANCELLED";
-
-            urlDisplay.innerHTML =
-                "NO URL RECEIVED";
-
-        }
-        else{
-
-            statusDiv.innerHTML =
-                "WAITING FOR COMMAND";
-
-            urlDisplay.innerHTML =
-                "NO URL RECEIVED";
-
-        }
-
-    })
-    .catch(() => {
-
-        statusDiv.innerHTML =
-            "COMMAND FILE ERROR";
-
-    });
+    document.getElementById("status").innerHTML =
+        "WAITING FOR COMMAND";
 
 }
 
-setInterval(function(){
+function disarmAutomation() {
+
+    automationArmed = false;
+
+    document.getElementById("status").innerHTML =
+        "READY";
+
+    document.getElementById("urlDisplay").innerHTML =
+        "NO URL RECEIVED";
+
+}
+
+function checkForCommand() {
+
+    if (!automationArmed) {
+        return;
+    }
+
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
+
+    setTimeout(function () {
+
+        if (automationArmed) {
+
+            document.getElementById("status").innerHTML =
+                "WAITING FOR COMMAND";
+
+        }
+
+    }, 4000);
+
+}
+
+setInterval(function () {
 
     checkForCommand();
 
-},5000);
+}, 5000);
 
 </script>
 
