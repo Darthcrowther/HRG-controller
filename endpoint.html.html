@@ -147,16 +147,48 @@ function checkForCommand() {
     document.getElementById("status").innerHTML =
         "CHECKING FOR COMMAND";
 
-    setTimeout(function () {
+    fetch(
+        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
+        Date.now()
+    )
+    .then(response => response.text())
+    .then(command => {
 
-        if (automationArmed) {
+        const parts = command.trim().split("|");
+
+        const endpoint = parts[0];
+        const action = parts[1];
+        const meetingURL = parts[2] || "";
+
+        if (
+            endpoint === "EP-001" &&
+            action === "JOIN"
+        ) {
+
+            document.getElementById("status").innerHTML =
+                "JOIN COMMAND RECEIVED";
+
+            document.getElementById("urlDisplay").innerHTML =
+                meetingURL;
+
+        }
+        else {
 
             document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
 
+            document.getElementById("urlDisplay").innerHTML =
+                "NO URL RECEIVED";
+
         }
 
-    }, 4000);
+    })
+    .catch(() => {
+
+        document.getElementById("status").innerHTML =
+            "COMMAND FILE ERROR";
+
+    });
 
 }
 
