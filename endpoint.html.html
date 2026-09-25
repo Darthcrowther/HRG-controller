@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
-
+ 
 <head>
 <meta charset="UTF-8">
 <title>HMCTS Endpoint Controller</title>
-
+ 
 <style>
-
+ 
 body{
 margin:0;
 background:#f3f2f1;
 font-family:Arial,sans-serif;
 text-align:center;
 }
-
+ 
 .header{
 background:#003078;
 color:white;
@@ -21,7 +21,7 @@ padding:25px;
 font-size:32px;
 font-weight:bold;
 }
-
+ 
 .panel{
 background:white;
 width:700px;
@@ -30,21 +30,21 @@ padding:30px;
 border-radius:10px;
 box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
-
+ 
 .endpoint{
 font-size:28px;
 color:#003078;
 font-weight:bold;
 margin-bottom:20px;
 }
-
+ 
 .status{
 font-size:24px;
 margin:25px;
 color:#003078;
 font-weight:bold;
 }
-
+ 
 button{
 width:420px;
 height:90px;
@@ -56,140 +56,114 @@ cursor:pointer;
 color:white;
 margin:15px;
 }
-
+ 
 .arm{
 background:#00703c;
 }
-
+ 
 .arm:hover{
 background:#005a30;
 }
-
+ 
 .disarm{
 background:#d4351c;
 }
-
+ 
 .disarm:hover{
 background:#b10e1e;
 }
-
+ 
 </style>
-
+ 
 </head>
-
+ 
 <body>
-
+ 
 <div class="header">
 HMCTS ENDPOINT CONTROLLER
 </div>
-
+ 
 <div class="panel">
-
+ 
 <div class="endpoint">
 Endpoint: EP-001
 </div>
-
+ 
 <div id="status" class="status">
 READY
 </div>
-
+ 
 <button class="arm" id="armBtn">
 ARM AUTOMATION
 </button>
-
+ 
 <br>
-
+ 
 <button class="disarm" id="disarmBtn">
 DISARM
 </button>
-
+ 
 </div>
-
+ 
 <script>
-
+ 
 let automationArmed = false;
-
+ 
 const statusDiv =
 document.getElementById("status");
-
+ 
 document
 .getElementById("armBtn")
 .addEventListener("click", function(){
-
+ 
 automationArmed = true;
-
+ 
 statusDiv.innerHTML =
 "WAITING FOR COMMAND";
-
+ 
 });
-
+ 
 document
 .getElementById("disarmBtn")
 .addEventListener("click", function(){
-
+ 
 automationArmed = false;
-
+ 
 statusDiv.innerHTML =
 "READY";
-
+ 
 });
-
+ 
 function checkForCommand(){
-
-    if(!automationArmed){
-        return;
-    }
-
-    fetch(
-        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
-        Date.now()
-    )
-    .then(response => response.text())
-    .then(command => {
-
-        const parts = command.trim().split("|");
-
-        const endpoint = parts[0];
-        const action = parts[1];
-        const meetingURL = parts[2];
-
-if(
-    endpoint === "EP-001" &&
-    action === "JOIN"
-){
-
-    statusDiv.innerHTML =
-        "JOIN COMMAND RECEIVED";
-
-    console.log(meetingURL);
-
+ 
+if(!automationArmed){
+return;
 }
-
-    statusDiv.innerHTML =
-        "JOIN COMMAND RECEIVED<br><br>" +
-        meetingURL;
-
+ 
+statusDiv.innerHTML =
+"CHECKING FOR COMMAND";
+ 
+setTimeout(function(){
+ 
+if(automationArmed){
+ 
+statusDiv.innerHTML =
+"WAITING FOR COMMAND";
+ 
 }
-        if(
-            endpoint === "EP-001" &&
-            action === "JOIN"
-        ){
-
-            statusDiv.innerHTML =
-                "JOIN COMMAND RECEIVED";
-@@ -193,15 +180,14 @@
-    });
-
+ 
+},2000);
+ 
 }
-
+ 
 setInterval(function(){
-
-    checkForCommand();
-
+ 
+checkForCommand();
+ 
 },5000);
-
+ 
 </script>
-
+ 
 </body>
-
+ 
 </html>
