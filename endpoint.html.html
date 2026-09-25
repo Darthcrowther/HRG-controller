@@ -198,6 +198,39 @@ else{
     });
 
 }
+    function checkForEndCommand(){
+
+    if(!automationArmed){
+        return;
+    }
+
+    fetch(
+        "https://darthcrowther.github.io/HRG-controller/end.txt?nocache=" +
+        Date.now()
+    )
+    .then(response => response.text())
+    .then(command => {
+
+        command = command.trim();
+
+        if(command === "END"){
+
+            statusDiv.innerHTML =
+                "END COMMAND RECEIVED";
+
+            document.getElementById("urlDisplay").innerHTML =
+                "";
+
+        }
+
+    })
+    .catch(() => {
+
+        console.log("End file check failed");
+
+    });
+
+}
 setInterval(function(){
 
     checkForCommand();
