@@ -43,6 +43,7 @@ body{
     margin:25px;
     color:#003078;
     font-weight:bold;
+    word-break:break-word;
 }
 
 button{
@@ -117,7 +118,7 @@ CANCEL REQUEST
 
 let automationArmed = false;
 
-function armAutomation() {
+function armAutomation(){
 
     automationArmed = true;
 
@@ -126,7 +127,7 @@ function armAutomation() {
 
 }
 
-function disarmAutomation() {
+function disarmAutomation(){
 
     automationArmed = false;
 
@@ -138,33 +139,79 @@ function disarmAutomation() {
 
 }
 
-function checkForCommand() {
+function checkForCommand(){
 
-    if (!automationArmed) {
+    if(!automationArmed){
         return;
     }
 
     document.getElementById("status").innerHTML =
         "CHECKING FOR COMMAND";
 
-    setTimeout(function () {
+    fetch(
+        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
+        Date.now()
+    )
+    .then(response => response.text())
+    .then(command => {
 
-        if (automationArmed) {
+        const value = command.trim();
+
+        if(value === "NONE"){
+
+            document.getElementById("status").innerHTML =
+                "WAITING FOR COMMAND";
+
+            document.getElementById("urlDisplay").innerHTML =
+                "NO URL RECEIVED";
+
+        }
+        else if(value.startsWith("JOIN|")){
+
+            const meetingURL =
+                value.split("|")[1];
+
+            document.getElementById("status").innerHTML =
+                "HEARING REQUEST RECEIVED";
+
+            document.getElementById("urlDisplay").innerHTML =
+                meetingURL;
+
+            window.meetingURL =
+                meetingURL;
+
+        }
+        else if(value === "END"){
+
+            document.getElementById("status").innerHTML =
+                "REQUEST CANCELLED";
+
+            document.getElementById("urlDisplay").innerHTML =
+                "NO URL RECEIVED";
+
+        }
+        else{
 
             document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
 
         }
 
-    }, 4000);
+    })
+    .catch(() => {
+
+        document.getElementById("status").innerHTML =
+            "WAITING FOR COMMAND";
+
+    });
 
 }
 
-setInterval(function () {
+setInterval(function(){
 
     checkForCommand();
 
-}, 5000);
+},5000);
 
 </script>
 
