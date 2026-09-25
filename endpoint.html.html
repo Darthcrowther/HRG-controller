@@ -117,6 +117,9 @@ let automationArmed = false;
 const statusDiv =
     document.getElementById("status");
 
+const urlDisplay =
+    document.getElementById("urlDisplay");
+
 document
     .getElementById("armBtn")
     .addEventListener("click", function(){
@@ -137,7 +140,7 @@ document
         statusDiv.innerHTML =
             "READY";
 
-        document.getElementById("urlDisplay").innerHTML =
+        urlDisplay.innerHTML =
             "NO URL RECEIVED";
 
     });
@@ -168,7 +171,7 @@ function checkForCommand(){
             parts[1];
 
         const meetingURL =
-            parts[2];
+            parts[2] || "";
 
         if(
             endpoint === "EP-001" &&
@@ -178,10 +181,10 @@ function checkForCommand(){
             statusDiv.innerHTML =
                 "HEARING REQUEST RECEIVED";
 
-            window.meetingURL =
+            urlDisplay.innerHTML =
                 meetingURL;
 
-            document.getElementById("urlDisplay").innerHTML =
+            window.meetingURL =
                 meetingURL;
 
         }
@@ -193,7 +196,7 @@ function checkForCommand(){
             statusDiv.innerHTML =
                 "REQUEST CANCELLED";
 
-            document.getElementById("urlDisplay").innerHTML =
+            urlDisplay.innerHTML =
                 "NO URL RECEIVED";
 
         }
@@ -202,7 +205,7 @@ function checkForCommand(){
             statusDiv.innerHTML =
                 "WAITING FOR COMMAND";
 
-            document.getElementById("urlDisplay").innerHTML =
+            urlDisplay.innerHTML =
                 "NO URL RECEIVED";
 
         }
