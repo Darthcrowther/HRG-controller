@@ -158,7 +158,7 @@ function checkForCommand(){
         const action = parts[1];
         const meetingURL = parts[2];
 if(
-    endpoint === endpointID &&
+    endpoint === "EP-001" &&
     action === "JOIN"
 ){
 
@@ -172,12 +172,14 @@ if(
 
 }
 else if(
-    endpoint === endpointID &&
+    endpoint === "EP-001" &&
     action === "END"
 ){
 
     statusDiv.innerHTML =
         "END COMMAND RECEIVED";
+
+}
 
     document.getElementById("urlDisplay").innerHTML =
         "";
