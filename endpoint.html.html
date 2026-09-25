@@ -156,12 +156,7 @@ function checkForCommand(){
         const endpoint = parts[0];
         const action = parts[1];
         const meetingURL = parts[2];
-
-        if(
-            endpoint === "EP-001" &&
-            action === "JOIN"
-        ){
-            if(
+if(
     endpoint === "EP-001" &&
     action === "JOIN"
 ){
@@ -183,6 +178,9 @@ else if(
     statusDiv.innerHTML =
         "END COMMAND RECEIVED";
 
+    document.getElementById("urlDisplay").innerHTML =
+        "";
+
 }
 else{
 
@@ -190,21 +188,6 @@ else{
         "WAITING FOR COMMAND";
 
 }
-
-            statusDiv.innerHTML =
-                "JOIN COMMAND RECEIVED";
-
-            window.meetingURL = meetingURL;
-            document.getElementById("urlDisplay").innerHTML =
-    meetingURL;
-
-        }
-        else{
-
-            statusDiv.innerHTML =
-                "WAITING FOR COMMAND";
-
-        }
 
     })
     .catch(() => {
