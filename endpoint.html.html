@@ -43,7 +43,6 @@ body{
     margin:25px;
     color:#003078;
     font-weight:bold;
-    word-break:break-word;
 }
 
 button{
@@ -98,14 +97,18 @@ READY
 NO URL RECEIVED
 </div>
 
-<button class="arm" id="armBtn">
-ARM AUTOMATION
+<button
+class="arm"
+onclick="armAutomation()">
+LAUNCH HEARING
 </button>
 
 <br>
 
-<button class="disarm" id="disarmBtn">
-DISARM
+<button
+class="disarm"
+onclick="disarmAutomation()">
+CANCEL REQUEST
 </button>
 
 </div>
@@ -114,33 +117,26 @@ DISARM
 
 let automationArmed = false;
 
-const statusDiv =
-    document.getElementById("status");
+function armAutomation(){
 
-document
-    .getElementById("armBtn")
-    .addEventListener("click", function(){
+    automationArmed = true;
 
-        automationArmed = true;
+    document.getElementById("status").innerHTML =
+        "WAITING FOR COMMAND";
 
-        statusDiv.innerHTML =
-            "WAITING FOR COMMAND";
+}
 
-    });
+function disarmAutomation(){
 
-document
-    .getElementById("disarmBtn")
-    .addEventListener("click", function(){
+    automationArmed = false;
 
-        automationArmed = false;
+    document.getElementById("status").innerHTML =
+        "READY";
 
-        statusDiv.innerHTML =
-            "READY";
+    document.getElementById("urlDisplay").innerHTML =
+        "NO URL RECEIVED";
 
-        document.getElementById("urlDisplay").innerHTML =
-            "NO URL RECEIVED";
-
-    });
+}
 
 function checkForCommand(){
 
@@ -148,44 +144,30 @@ function checkForCommand(){
         return;
     }
 
-    fetch(
-        "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
-        Date.now()
-    )
-    .then(response => response.text())
-    .then(command => {
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
 
-        const parts =
-            command.trim().split("|");
+    setTimeout(function(){
 
-        const endpoint =
-            parts[0];
+        if(automationArmed){
 
-        const action =
-            parts[1];
-
-        const meetingURL =
-            parts[2];
-
-        if(
-            endpoint === "EP-001" &&
-            action === "JOIN"
-        ){
-
-            statusDiv.innerHTML =
-                "JOIN COMMAND RECEIVED";
-
-            window.meetingURL =
-                meetingURL;
-
-            document.getElementById("urlDisplay").innerHTML =
-                meetingURL;
-
-        }
-        else{
-
-            statusDiv.innerHTML =
+            document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
 
-            document.getElementById("urlDisplay").innerHTML =
-        
+        }
+
+    },4000);
+
+}
+
+setInterval(function(){
+
+    checkForCommand();
+
+},5000);
+
+</script>
+
+</body>
+
+</html>
