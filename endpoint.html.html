@@ -1,114 +1,3 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="UTF-8">
-<title>HMCTS Endpoint Controller</title>
-
-<style>
-
-body{
-    margin:0;
-    background:#f3f2f1;
-    font-family:Arial,sans-serif;
-    text-align:center;
-}
-
-.header{
-    background:#003078;
-    color:white;
-    padding:25px;
-    font-size:32px;
-    font-weight:bold;
-}
-
-.panel{
-    background:white;
-    width:700px;
-    margin:40px auto;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-}
-
-.endpoint{
-    font-size:28px;
-    color:#003078;
-    font-weight:bold;
-    margin-bottom:20px;
-}
-
-.status{
-    font-size:24px;
-    margin:25px;
-    color:#003078;
-    font-weight:bold;
-}
-
-button{
-    width:420px;
-    height:90px;
-    border:none;
-    border-radius:8px;
-    font-size:26px;
-    font-weight:bold;
-    cursor:pointer;
-    color:white;
-    margin:15px;
-}
-
-.arm{
-    background:#00703c;
-}
-
-.arm:hover{
-    background:#005a30;
-}
-
-.disarm{
-    background:#d4351c;
-}
-
-.disarm:hover{
-    background:#b10e1e;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-HMCTS ENDPOINT CONTROLLER
-</div>
-
-<div class="panel">
-
-<div class="endpoint">
-Endpoint: EP-001
-</div>
-
-<div id="status" class="status">
-READY
-</div>
-
-<div id="urlDisplay" class="status">
-NO URL RECEIVED
-</div>
-
-<button class="arm" id="armBtn">
-LAUNCH HEARING
-</button>
-
-<br>
-
-<button class="disarm" id="disarmBtn">
-CANCEL REQUEST
-</button>
-
-</div>
-
 <script>
 
 let automationArmed = false;
@@ -136,6 +25,9 @@ document
         statusDiv.innerHTML =
             "READY";
 
+        document.getElementById("urlDisplay").innerHTML =
+            "NO URL RECEIVED";
+
     });
 
 function checkForCommand(){
@@ -144,6 +36,9 @@ function checkForCommand(){
         return;
     }
 
+    statusDiv.innerHTML =
+        "CHECKING FOR COMMAND";
+
     fetch(
         "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
         Date.now()
@@ -151,11 +46,17 @@ function checkForCommand(){
     .then(response => response.text())
     .then(command => {
 
-        const parts = command.trim().split("|");
+        const parts =
+            command.trim().split("|");
 
-        const endpoint = parts[0];
-        const action = parts[1];
-        const meetingURL = parts[2];
+        const endpoint =
+            parts[0];
+
+        const action =
+            parts[1];
+
+        const meetingURL =
+            parts[2];
 
         if(
             endpoint === "EP-001" &&
@@ -168,7 +69,9 @@ function checkForCommand(){
             window.meetingURL =
                 meetingURL;
 
-            document.getElementById("urlDisplay").innerHTML =
+            document.getElementById(
+                "urlDisplay"
+            ).innerHTML =
                 meetingURL;
 
         }
@@ -180,8 +83,10 @@ function checkForCommand(){
             statusDiv.innerHTML =
                 "REQUEST CANCELLED";
 
-            document.getElementById("urlDisplay").innerHTML =
-                "";
+            document.getElementById(
+                "urlDisplay"
+            ).innerHTML =
+                "NO URL RECEIVED";
 
         }
         else{
@@ -189,7 +94,9 @@ function checkForCommand(){
             statusDiv.innerHTML =
                 "WAITING FOR COMMAND";
 
-            document.getElementById("urlDisplay").innerHTML =
+            document.getElementById(
+                "urlDisplay"
+            ).innerHTML =
                 "NO URL RECEIVED";
 
         }
@@ -211,7 +118,3 @@ setInterval(function(){
 },5000);
 
 </script>
-
-</body>
-
-</html>
