@@ -144,6 +144,18 @@ function checkForCommand() {
         return;
     }
 
+    if (window.meetingURL) {
+
+        document.getElementById("status").innerHTML =
+            "HEARING REQUEST RECEIVED";
+
+        document.getElementById("urlDisplay").innerHTML =
+            window.meetingURL;
+
+        return;
+
+    }
+
     document.getElementById("status").innerHTML =
         "CHECKING FOR COMMAND";
 
