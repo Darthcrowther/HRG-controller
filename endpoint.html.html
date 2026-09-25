@@ -43,6 +43,7 @@ body{
     margin:25px;
     color:#003078;
     font-weight:bold;
+    word-break:break-word;
 }
 
 button{
@@ -97,13 +98,17 @@ READY
 NO URL RECEIVED
 </div>
 
-<button class="arm" id="armBtn">
+<button
+class="arm"
+onclick="armAutomation()">
 LAUNCH HEARING
 </button>
 
 <br>
 
-<button class="disarm" id="disarmBtn">
+<button
+class="disarm"
+onclick="disarmAutomation()">
 CANCEL REQUEST
 </button>
 
@@ -113,39 +118,35 @@ CANCEL REQUEST
 
 let automationArmed = false;
 
-const statusDiv =
-document.getElementById("status");
-
-document
-.getElementById("armBtn")
-.addEventListener("click", function(){
+function armAutomation() {
 
     automationArmed = true;
 
-    statusDiv.innerHTML =
+    document.getElementById("status").innerHTML =
         "WAITING FOR COMMAND";
 
-});
+}
 
-document
-.getElementById("disarmBtn")
-.addEventListener("click", function(){
+function disarmAutomation() {
 
     automationArmed = false;
 
-    statusDiv.innerHTML =
+    document.getElementById("status").innerHTML =
         "READY";
 
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
-});
+}
 
-function checkForCommand(){
+function checkForCommand() {
 
-    if(!automationArmed){
+    if (!automationArmed) {
         return;
     }
+
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
 
     fetch(
         "https://darthcrowther.github.io/HRG-controller/command.txt?nocache=" +
@@ -158,25 +159,25 @@ function checkForCommand(){
 
         const endpoint = parts[0];
         const action = parts[1];
-        const meetingURL = parts[2];
+        const meetingURL = parts[2] || "";
 
         if(
             endpoint === "EP-001" &&
             action === "JOIN"
         ){
 
-            statusDiv.innerHTML =
+            document.getElementById("status").innerHTML =
                 "JOIN COMMAND RECEIVED";
-
-            window.meetingURL = meetingURL;
 
             document.getElementById("urlDisplay").innerHTML =
                 meetingURL;
 
+            window.meetingURL = meetingURL;
+
         }
         else{
 
-            statusDiv.innerHTML =
+            document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
 
             document.getElementById("urlDisplay").innerHTML =
@@ -187,7 +188,7 @@ function checkForCommand(){
     })
     .catch(() => {
 
-        statusDiv.innerHTML =
+        document.getElementById("status").innerHTML =
             "COMMAND FILE ERROR";
 
     });
