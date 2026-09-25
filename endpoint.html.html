@@ -161,6 +161,35 @@ function checkForCommand(){
             endpoint === "EP-001" &&
             action === "JOIN"
         ){
+            if(
+    endpoint === "EP-001" &&
+    action === "JOIN"
+){
+
+    statusDiv.innerHTML =
+        "JOIN COMMAND RECEIVED";
+
+    window.meetingURL = meetingURL;
+
+    document.getElementById("urlDisplay").innerHTML =
+        meetingURL;
+
+}
+else if(
+    endpoint === "EP-001" &&
+    action === "END"
+){
+
+    statusDiv.innerHTML =
+        "END COMMAND RECEIVED";
+
+}
+else{
+
+    statusDiv.innerHTML =
+        "WAITING FOR COMMAND";
+
+}
 
             statusDiv.innerHTML =
                 "JOIN COMMAND RECEIVED";
