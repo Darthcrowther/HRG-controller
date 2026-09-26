@@ -43,7 +43,6 @@ body{
     margin:25px;
     color:#003078;
     font-weight:bold;
-    word-break:break-word;
 }
 
 button{
@@ -76,8 +75,6 @@ button{
 
 </style>
 
-<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
-
 </head>
 
 <body>
@@ -100,13 +97,17 @@ READY
 NO URL RECEIVED
 </div>
 
-<button class="arm" onclick="armAutomation()">
+<button
+class="arm"
+onclick="armAutomation()">
 LAUNCH HEARING
 </button>
 
 <br>
 
-<button class="disarm" onclick="disarmAutomation()">
+<button
+class="disarm"
+onclick="disarmAutomation()">
 CANCEL REQUEST
 </button>
 
@@ -115,15 +116,6 @@ CANCEL REQUEST
 <script>
 
 let automationArmed = false;
-
-const ably = new Ably.Realtime(
-    "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
-);
-
-const channel = ably.channels.get("hearings");
-
-alert("ABLY CONNECTED");
-console.log("ABLY CONNECTED");
 
 function armAutomation(){
 
@@ -146,48 +138,33 @@ function disarmAutomation(){
 
 }
 
-try {
+function checkForCommand(){
 
-    channel.subscribe(function(message){
+    if(!automationArmed){
+        return;
+    }
 
-        console.log("MESSAGE RECEIVED");
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
 
-    });
+    setTimeout(function(){
 
-} catch(error) {
+        if(automationArmed){
 
-    console.log(error);
+            document.getElementById("status").innerHTML =
+                "WAITING FOR COMMAND";
+
+        }
+
+    },4000);
 
 }
-    const data = message.data;
 
-    if(
-        data.endpoint === "EP-001" &&
-        data.action === "JOIN"
-    ){
+setInterval(function(){
 
-        document.getElementById("status").innerHTML =
-            "HEARING REQUEST RECEIVED";
+    checkForCommand();
 
-        document.getElementById("urlDisplay").innerHTML =
-            data.url || "NO URL RECEIVED";
-
-    }
-
-    if(
-        data.endpoint === "EP-001" &&
-        data.action === "END"
-    ){
-
-        document.getElementById("status").innerHTML =
-            "REQUEST CANCELLED";
-
-        document.getElementById("urlDisplay").innerHTML =
-            "NO URL RECEIVED";
-
-    }
-
-});
+},5000);
 
 </script>
 
