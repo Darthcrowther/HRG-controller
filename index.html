@@ -77,6 +77,8 @@ button{
 
 </style>
 
+<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+
 </head>
 
 <body>
@@ -133,7 +135,17 @@ END HEARING
 
 <script>
 
-// Read values from Power Apps URL
+// =========================
+// ABLY
+// =========================
+
+const ably = new Ably.Realtime("rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4");
+
+const channel = ably.channels.get("hearings");
+
+// =========================
+// POWER APP VALUES
+// =========================
 
 const params = new URLSearchParams(window.location.search);
 
@@ -144,7 +156,9 @@ const meetingURL = params.get("url");
 
 let hearingWindow = null;
 
-// Display values
+// =========================
+// DISPLAY VALUES
+// =========================
 
 document.getElementById("siteValue").innerText =
     site || "Not Supplied";
@@ -155,10 +169,11 @@ document.getElementById("endpointValue").innerText =
 document.getElementById("cloudValue").innerText =
     cloudRoom || "Not Supplied";
 
+// =========================
 // START HEARING
+// =========================
 
 function startHearing(){
-    alert("ABLY TEST");
 
     if(!meetingURL){
 
@@ -169,6 +184,15 @@ function startHearing(){
         return;
     }
 
+    channel.publish(
+        "hearing",
+        {
+            endpoint: endpoint,
+            action: "JOIN",
+            url: meetingURL
+        }
+    );
+
     hearingWindow =
         window.open(
             meetingURL,
@@ -176,41 +200,37 @@ function startHearing(){
         );
 
     document.getElementById("status").innerHTML =
-        "HEARING OPENED<br><br>WAITING FOR HOST / GUEST";
+        "JOIN MESSAGE SENT";
 
 }
 
+// =========================
 // END HEARING
+// =========================
 
 function endHearing(){
 
-    if(confirm("End Hearing?")){
-
-        if(
-            hearingWindow &&
-            !hearingWindow.closed
-        ){
-
-            hearingWindow.close();
-
+    channel.publish(
+        "hearing",
+        {
+            endpoint: endpoint,
+            action: "END"
         }
+    );
 
-        document.getElementById("status").innerHTML =
-            "READY";
-
+    if(
+        hearingWindow &&
+        !hearingWindow.closed
+    ){
+        hearingWindow.close();
     }
+
+    document.getElementById("status").innerHTML =
+        "END MESSAGE SENT";
 
 }
 
-<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
-
-<script>
-
-const ably = new Ably.Realtime(rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4);
-
-const channel = ably.channels.get("hearings");
-
-alert("ABLY LOADED");
+</script>
 
 </body>
 </html>
