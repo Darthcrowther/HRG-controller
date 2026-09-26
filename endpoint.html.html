@@ -198,6 +198,8 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data;
 
+alert(JSON.stringify(data));
+
     if(
         data.endpoint === "EP-001" &&
         data.action === "JOIN"
