@@ -219,28 +219,11 @@ channel.subscribe("hearing", function(message){
     }
 
 });
-
-        const data = message.data;
-
-            if(
-            data.endpoint === "EP-001" &&
-            data.action === "END"
-        ){
-
-            document.getElementById("status").innerHTML =
-                "REQUEST CANCELLED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                "NO URL RECEIVED";
-
-            window.meetingURL = "";
-
-        }
-
-    });
-
+      
 </script>
 
 </body>
 
 </html>
+     
+
