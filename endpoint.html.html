@@ -198,7 +198,8 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data;
 
-alert(JSON.stringify(data));
+document.getElementById("status").innerHTML =
+    JSON.stringify(data);
 
     if(
         data.endpoint === "EP-001" &&
