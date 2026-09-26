@@ -222,23 +222,7 @@ channel.subscribe("hearing", function(message){
 
         const data = message.data;
 
-        if(
-            data.endpoint === "EP-001" &&
-            data.action === "JOIN"
-        ){
-
-            document.getElementById("status").innerHTML =
-                "HEARING REQUEST RECEIVED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                data.url;
-
-            window.meetingURL =
-                data.url;
-
-        }
-
-        if(
+            if(
             data.endpoint === "EP-001" &&
             data.action === "END"
         ){
@@ -253,7 +237,8 @@ channel.subscribe("hearing", function(message){
 
         }
 
-);
+    });
+
 </script>
 
 </body>
