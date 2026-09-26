@@ -146,12 +146,11 @@ function disarmAutomation(){
 
 }
 
-channel.subscribe("hearing", function(message){
+channel.subscribe(function(message){
 
-    if(!automationArmed){
-        return;
-    }
+    alert("MESSAGE RECEIVED");
 
+});
     const data = message.data;
 
     if(
