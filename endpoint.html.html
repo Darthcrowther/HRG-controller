@@ -158,12 +158,23 @@ function checkForCommand(){
         return;
     }
 
+    if(
+        document.getElementById("status").innerHTML ===
+        "HEARING REQUEST RECEIVED"
+    ){
+        return;
+    }
+
     document.getElementById("status").innerHTML =
         "CHECKING FOR COMMAND";
 
     setTimeout(function(){
 
-        if(automationArmed){
+        if(
+            automationArmed &&
+            document.getElementById("status").innerHTML !==
+            "HEARING REQUEST RECEIVED"
+        ){
 
             document.getElementById("status").innerHTML =
                 "WAITING FOR COMMAND";
