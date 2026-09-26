@@ -74,7 +74,7 @@ button{
 }
 
 </style>
-
+    
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 
 </head>
@@ -125,7 +125,7 @@ const ably = new Ably.Realtime(
 
 const channel =
     ably.channels.get("hearings");
-
+alert("ABLY LOADED");
 function armAutomation(){
 
     automationArmed = true;
