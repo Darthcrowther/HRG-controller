@@ -118,111 +118,21 @@ CANCEL REQUEST
 
 <script>
 
-// =========================
-// CONFIG
-// =========================
+let automationArmed = false;
 
-const ENDPOINT_ID = "EP-001";
-
-// =========================
-// ABLY
-// =========================
-
+// ======
 const ably = new Ably.Realtime(
-    "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4Y"
+    "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
 );
 
 const channel =
     ably.channels.get("hearings");
-    channel.subscribe("hearing", function(message){
-
-    document.getElementById("status").innerHTML =
-        "MESSAGE RECEIVED";
-
-});
-
-// =========================
-// STATE
-// =========================
-
-let automationArmed = false;
-
-// =========================
-// BUTTONS
-// =========================
-
-function armAutomation(){
-
-    automationArmed = true;
-
-    document.getElementById("status").innerHTML =
-        "WAITING FOR COMMAND";
-
-}
-
-function disarmAutomation(){
-
-    automationArmed = false;
-
-    document.getElementById("status").innerHTML =
-        "READY";
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-
-}
-
-// =========================
-// ABLY SUBSCRIPTION
-// =========================
 
 channel.subscribe(
     "hearing",
     function(message){
 
-        if(!automationArmed){
-            return;
-        }
-
-        const data =
-            message.data;
-
-        if(
-            data.endpoint === ENDPOINT_ID &&
-            data.action === "JOIN"
-        ){
-
-            document.getElementById("status").innerHTML =
-                "HEARING REQUEST RECEIVED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                data.url;
-
-            window.meetingURL =
-                data.url;
-
-        }
-
-        if(
-            data.endpoint === ENDPOINT_ID &&
-            data.action === "END"
-        ){
-
-            document.getElementById("status").innerHTML =
-                "REQUEST CANCELLED";
-
-            document.getElementById("urlDisplay").innerHTML =
-                "NO URL RECEIVED";
-
-            window.meetingURL = "";
-
-        }
+        alert("MESSAGE RECEIVED");
 
     }
 );
-
-</script>
-
-</body>
-
-</html>
