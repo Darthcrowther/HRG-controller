@@ -146,11 +146,19 @@ function disarmAutomation(){
 
 }
 
-channel.subscribe(function(message){
+try {
 
-    alert("MESSAGE RECEIVED");
+    channel.subscribe(function(message){
 
-});
+        console.log("MESSAGE RECEIVED");
+
+    });
+
+} catch(error) {
+
+    console.log(error);
+
+}
     const data = message.data;
 
     if(
