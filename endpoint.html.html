@@ -134,6 +134,12 @@ const ably = new Ably.Realtime(
 
 const channel =
     ably.channels.get("hearings");
+    channel.subscribe("hearing", function(message){
+
+    document.getElementById("status").innerHTML =
+        "MESSAGE RECEIVED";
+
+});
 
 // =========================
 // STATE
