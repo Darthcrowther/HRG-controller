@@ -205,44 +205,6 @@ channel.subscribe("hearing", function(message){
         data.url || "NO URL RECEIVED";
 
 });
-
-    const data = message.data;
-
-document.getElementById("status").innerHTML =
-    JSON.stringify(data);
-
-    if(
-        data.endpoint === "EP-001" &&
-        data.action === "JOIN"
-    ){
-
-        document.getElementById("status").innerHTML =
-            "HEARING REQUEST RECEIVED";
-
-        document.getElementById("urlDisplay").innerHTML =
-            data.url;
-
-        window.meetingURL =
-            data.url;
-
-    }
-
-    if(
-        data.endpoint === "EP-001" &&
-        data.action === "END"
-    ){
-
-        document.getElementById("status").innerHTML =
-            "REQUEST CANCELLED";
-
-        document.getElementById("urlDisplay").innerHTML =
-            "NO URL RECEIVED";
-
-        window.meetingURL = "";
-
-    }
-
-});
       
 </script>
 
