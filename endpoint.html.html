@@ -179,13 +179,46 @@ setInterval(function(){
     checkForCommand();
 
 },5000);
-channel.subscribe(
-    "hearing",
-    function(message){
+channel.subscribe("hearing", function(message){
 
-        if(!automationArmed){
-            return;
-        }
+    if(!automationArmed){
+        return;
+    }
+
+    const data = message.data;
+
+    if(
+        data.endpoint === "EP-001" &&
+        data.action === "JOIN"
+    ){
+
+        document.getElementById("status").innerHTML =
+            "HEARING REQUEST RECEIVED";
+
+        document.getElementById("urlDisplay").innerHTML =
+            data.url;
+
+        window.meetingURL =
+            data.url;
+
+    }
+
+    if(
+        data.endpoint === "EP-001" &&
+        data.action === "END"
+    ){
+
+        document.getElementById("status").innerHTML =
+            "REQUEST CANCELLED";
+
+        document.getElementById("urlDisplay").innerHTML =
+            "NO URL RECEIVED";
+
+        window.meetingURL = "";
+
+    }
+
+});
 
         const data = message.data;
 
