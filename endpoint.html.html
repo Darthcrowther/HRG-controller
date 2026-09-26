@@ -198,6 +198,16 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data;
 
+    document.getElementById("status").innerHTML =
+        "HEARING REQUEST RECEIVED";
+
+    document.getElementById("urlDisplay").innerHTML =
+        data.url || "NO URL RECEIVED";
+
+});
+
+    const data = message.data;
+
 document.getElementById("status").innerHTML =
     JSON.stringify(data);
 
