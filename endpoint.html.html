@@ -43,6 +43,7 @@ body{
     margin:25px;
     color:#003078;
     font-weight:bold;
+    word-break:break-word;
 }
 
 button{
@@ -75,6 +76,8 @@ button{
 
 </style>
 
+<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+
 </head>
 
 <body>
@@ -101,73 +104,4 @@ NO URL RECEIVED
 class="arm"
 onclick="armAutomation()">
 LAUNCH HEARING
-</button>
-
-<br>
-
-<button
-class="disarm"
-onclick="disarmAutomation()">
-CANCEL REQUEST
-</button>
-
-</div>
-
-<script>
-
-let automationArmed = false;
-
-function armAutomation(){
-
-    automationArmed = true;
-
-    document.getElementById("status").innerHTML =
-        "WAITING FOR COMMAND";
-
-}
-
-function disarmAutomation(){
-
-    automationArmed = false;
-
-    document.getElementById("status").innerHTML =
-        "READY";
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-
-}
-
-function checkForCommand(){
-
-    if(!automationArmed){
-        return;
-    }
-
-    document.getElementById("status").innerHTML =
-        "CHECKING FOR COMMAND";
-
-    setTimeout(function(){
-
-        if(automationArmed){
-
-            document.getElementById("status").innerHTML =
-                "WAITING FOR COMMAND";
-
-        }
-
-    },4000);
-
-}
-
-setInterval(function(){
-
-    checkForCommand();
-
-},5000);
-
-</script>
-
-</body>
-
-</html>
+</
