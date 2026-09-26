@@ -175,14 +175,17 @@ document.getElementById("cloudValue").innerText =
 
 function startHearing(){
 
-    if(!meetingURL){
+    channel.publish(
+        "hearing",
+        {
+            test:"hello"
+        }
+    );
 
-        alert(
-            "No Meeting URL supplied from Power Apps."
-        );
+    document.getElementById("status").innerHTML =
+        "MESSAGE SENT";
 
-        return;
-    }
+}
 
     channel.publish(
         "hearing",
