@@ -126,6 +126,11 @@ const ably = new Ably.Realtime(
 const channel =
     ably.channels.get("hearings");
 alert("ABLY LOADED");
+channel.subscribe("hearing", function(message){
+
+    alert("MESSAGE RECEIVED");
+
+});
 function armAutomation(){
 
     automationArmed = true;
