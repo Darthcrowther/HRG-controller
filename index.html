@@ -139,20 +139,33 @@ END HEARING
 // ABLY
 // =========================
 
-const ably = new Ably.Realtime("rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4");
+const ably = new Ably.Realtime(
+    "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
+);
 
-const channel = ably.channels.get("hearings");
+const channel =
+    ably.channels.get("hearings");
 
 // =========================
 // POWER APP VALUES
 // =========================
 
-const params = new URLSearchParams(window.location.search);
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
 
-const site = params.get("site");
-const endpoint = params.get("endpoint");
-const cloudRoom = params.get("cloudroom");
-const meetingURL = params.get("url");
+const site =
+    params.get("site");
+
+const endpoint =
+    params.get("endpoint");
+
+const cloudRoom =
+    params.get("cloudroom");
+
+const meetingURL =
+    params.get("url");
 
 let hearingWindow = null;
 
@@ -175,9 +188,15 @@ document.getElementById("cloudValue").innerText =
 
 function startHearing(){
 
-    alert("START BUTTON WORKING");
+    if(!meetingURL){
 
-}
+        alert(
+            "No Meeting URL supplied from Power Apps."
+        );
+
+        return;
+
+    }
 
     channel.publish(
         "hearing",
@@ -217,7 +236,9 @@ function endHearing(){
         hearingWindow &&
         !hearingWindow.closed
     ){
+
         hearingWindow.close();
+
     }
 
     document.getElementById("status").innerHTML =
