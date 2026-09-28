@@ -137,7 +137,7 @@ channel.subscribe("hearing", function(message){
     const data = message.data;
 
     document.getElementById("status").innerHTML =
-        "HEARING REQUEST RECEIVED";
+    "COMMAND RECEIVED";
 
     const link =
         document.getElementById("urlDisplay");
@@ -178,7 +178,7 @@ function checkForCommand(){
 
     if(
         document.getElementById("status").innerHTML ===
-        "HEARING REQUEST RECEIVED"
+        "COMMAND RECEIVED"
     ){
         return;
     }
