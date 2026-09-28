@@ -137,8 +137,11 @@ function armAutomation(){
 
     automationArmed = true;
 
-    document.getElementById("status").innerHTML =
-        "WAITING FOR COMMAND";
+    const link =
+    document.getElementById("urlDisplay");
+
+link.innerHTML = data.url;
+link.href = data.url;
 
 }
 
