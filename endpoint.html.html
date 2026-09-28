@@ -149,7 +149,14 @@ channel.subscribe("hearing", function(message){
         data.url || "#";
 
 });
-``
+function armAutomation(){
+
+    automationArmed = true;
+
+    document.getElementById("status").innerHTML =
+        "WAITING FOR COMMAND";
+
+}    
 
 function disarmAutomation(){
 
@@ -201,21 +208,7 @@ setInterval(function(){
     checkForCommand();
 
 },5000);
-channel.subscribe("hearing", function(message){
 
-    if(!automationArmed){
-        return;
-    }
-
-    const data = message.data;
-
-    document.getElementById("status").innerHTML =
-        "HEARING REQUEST RECEIVED";
-
-    document.getElementById("urlDisplay").innerHTML =
-        data.url || "NO URL RECEIVED";
-
-});
       
 </script>
 
