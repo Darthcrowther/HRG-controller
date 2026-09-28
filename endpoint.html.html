@@ -130,20 +130,26 @@ const channel =
 alert("ABLY LOADED");
 channel.subscribe("hearing", function(message){
 
-    alert("MESSAGE RECEIVED");
+    if(!automationArmed){
+        return;
+    }
 
-});
-function armAutomation(){
+    const data = message.data;
 
-    automationArmed = true;
+    document.getElementById("status").innerHTML =
+        "HEARING REQUEST RECEIVED";
 
     const link =
-    document.getElementById("urlDisplay");
+        document.getElementById("urlDisplay");
 
-link.innerHTML = data.url;
-link.href = data.url;
+    link.innerHTML =
+        data.url || "NO URL RECEIVED";
 
-}
+    link.href =
+        data.url || "#";
+
+});
+``
 
 function disarmAutomation(){
 
