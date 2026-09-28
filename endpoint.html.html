@@ -176,10 +176,15 @@ function checkForCommand(){
         return;
     }
 
-    if(
-        document.getElementById("status").innerHTML ===
-        "COMMAND RECEIVED"
-    ){
+    const currentStatus =
+    document.getElementById("status").innerHTML;
+
+if(
+    currentStatus === "COMMAND RECEIVED" ||
+    currentStatus === "HEARING REQUEST RECEIVED"
+){
+    return;
+}{
         return;
     }
 
