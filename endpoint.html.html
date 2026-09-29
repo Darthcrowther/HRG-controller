@@ -79,6 +79,13 @@ button{
     margin:15px;
 }
 
+#urlDisplay{
+    display:block;
+    margin:20px;
+    font-size:18px;
+    word-break:break-all;
+}
+
 </style>
 
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
@@ -105,8 +112,8 @@ READY
 NONE
 </div>
 
-<a id="urlDisplay"
-D
+#
+NO URL RECEIVED
 </a>
 
 <br>
@@ -135,8 +142,7 @@ const ably = new Ably.Realtime(
     "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
 );
 
-const channel =
-    ably.channels.get("hearings");
+const channel = ably.channels.get("hearings");
 
 alert("ABLY LOADED");
 
@@ -195,7 +201,6 @@ function armAutomation(){
 
     document.getElementById("automaCommand").innerHTML =
         "NONE";
-
 }
 
 function disarmAutomation(){
@@ -216,7 +221,6 @@ function disarmAutomation(){
 
     link.href =
         "#";
-
 }
 
 </script>
