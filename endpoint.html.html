@@ -5,6 +5,7 @@
 <title>HMCTS Endpoint Controller</title>
 
 <style>
+
 body{
     margin:0;
     background:#f3f2f1;
@@ -22,7 +23,8 @@ body{
 
 .panel{
     background:white;
-    width:700px;
+    width:600px;
+    max-width:90%;
     margin:40px auto;
     padding:30px;
     border-radius:10px;
@@ -38,21 +40,38 @@ body{
 
 .status{
     font-size:24px;
-    margin:25px;
+    margin:25px 0;
     color:#003078;
     font-weight:bold;
 }
 
+#automaCommand{
+    font-size:20px;
+    color:#666;
+    margin:15px 0;
+}
+
+#urlDisplay{
+    margin:20px auto;
+    padding:12px;
+    border:1px solid #d8d8d8;
+    border-radius:5px;
+    background:#f8f8f8;
+    font-size:16px;
+    color:#003078;
+    word-break:break-all;
+}
+
 button{
-    width:420px;
-    height:90px;
+    width:320px;
+    height:80px;
     border:none;
     border-radius:8px;
-    font-size:26px;
+    font-size:24px;
     font-weight:bold;
     cursor:pointer;
     color:white;
-    margin:15px;
+    margin:10px;
 }
 
 .arm{
@@ -71,19 +90,6 @@ button{
     background:#b10e1e;
 }
 
-#automaCommand{
-    font-size:20px;
-    color:#666;
-    margin:15px;
-}
-
-#urlDisplay{
-    display:block;
-    margin:20px;
-    font-size:18px;
-    color:#003078;
-    word-break:break-all;
-}
 </style>
 
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
@@ -110,11 +116,9 @@ READY
 NONE
 </div>
 
-#
+<div id="urlDisplay">
 NO URL RECEIVED
-</a>
-
-<br>
+</div>
 
 <button
 class="arm"
@@ -137,7 +141,7 @@ CANCEL REQUEST
 let automationArmed = false;
 
 const ably = new Ably.Realtime(
-    "YOUR_ABLY_API_KEY"
+    "PASTE_YOUR_ABLY_KEY_HERE"
 );
 
 const channel = ably.channels.get("hearings");
@@ -150,7 +154,7 @@ channel.subscribe("hearing", function(message){
         return;
     }
 
-    const data = message.data;
+    const data = message.data || {};
 
     console.log("MESSAGE RECEIVED:", data);
 
@@ -162,23 +166,12 @@ channel.subscribe("hearing", function(message){
         document.getElementById("automaCommand").innerHTML =
             "OPEN";
 
-        const link =
-            document.getElementById("urlDisplay");
+        document.getElementById("urlDisplay").innerHTML =
+            data.url || "NO URL RECEIVED";
 
-        if(data.url){
-
-            link.innerHTML = data.url;
-            link.href = data.url;
-
-        }else{
-
-            link.innerHTML = "NO URL RECEIVED";
-            link.href = "#";
-
-        }
     }
 
-    if(data.action === "END"){
+    else if(data.action === "END"){
 
         document.getElementById("status").innerHTML =
             "HEARING ENDED";
@@ -186,15 +179,10 @@ channel.subscribe("hearing", function(message){
         document.getElementById("automaCommand").innerHTML =
             "CLOSE";
 
-        const link =
-            document.getElementById("urlDisplay");
-
-        link.innerHTML =
+        document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
-
-        link.href =
-            "#";
     }
+
 });
 
 function armAutomation(){
@@ -209,9 +197,6 @@ function armAutomation(){
 
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
-
-    document.getElementById("urlDisplay").href =
-        "#";
 }
 
 function disarmAutomation(){
@@ -225,13 +210,4 @@ function disarmAutomation(){
         "NONE";
 
     document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-
-    document.getElementById("urlDisplay").href =
-        "#";
-}
-
-</script>
-
-</body>
-</html>
+        
