@@ -199,11 +199,36 @@ function checkForCommand(){
     const currentStatus =
     document.getElementById("status").innerHTML;
 
-if(
-    currentStatus === "HEARING STARTED" ||
-    currentStatus === "HEARING ENDED"
-){
-    return;
+function checkForCommand(){
+
+    if(!automationArmed){
+        return;
+    }
+
+    const currentStatus =
+        document.getElementById("status").innerHTML;
+
+    if(
+        currentStatus === "HEARING STARTED" ||
+        currentStatus === "HEARING ENDED"
+    ){
+        return;
+    }
+
+    document.getElementById("status").innerHTML =
+        "CHECKING FOR COMMAND";
+
+    setTimeout(function(){
+
+        if(automationArmed){
+
+            document.getElementById("status").innerHTML =
+                "WAITING FOR COMMAND";
+
+        }
+
+    },4000);
+
 }
 
     document.getElementById("status").innerHTML =
