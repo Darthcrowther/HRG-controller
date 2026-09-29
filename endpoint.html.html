@@ -73,8 +73,14 @@ button{
     background:#b10e1e;
 }
 
+#automaCommand{
+    font-size:20px;
+    color:#666;
+    margin:15px;
+}
+
 </style>
-    
+
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 
 </head>
@@ -90,20 +96,20 @@ HMCTS ENDPOINT CONTROLLER
 <div class="endpoint">
 Endpoint: EP-001
 </div>
+
 <div id="status" class="status">
 READY
 </div>
 
-    <div id="automaCommand">
+<div id="automaCommand">
 NONE
 </div>
-    
-<a id="urlDisplay"
-   class="status"
-   href="#"
-   target="_blank">
+
+#
    NO URL RECEIVED
 </a>
+
+<br>
 
 <button
 class="arm"
@@ -131,7 +137,9 @@ const ably = new Ably.Realtime(
 
 const channel =
     ably.channels.get("hearings");
+
 alert("ABLY LOADED");
+
 channel.subscribe("hearing", function(message){
 
     if(!automationArmed){
@@ -140,32 +148,66 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data;
 
-if(data.action === "JOIN"){
+    if(data.action === "JOIN"){
+
+        document.getElementById("status").innerHTML =
+            "HEARING STARTED";
+
+        document.getElementById("automaCommand").innerHTML =
+            "OPEN";
+
+        const link =
+            document.getElementById("urlDisplay");
+
+        link.innerHTML =
+            data.url;
+
+        link.href =
+            data.url;
+    }
+
+    if(data.action === "END"){
+
+        document.getElementById("status").innerHTML =
+            "HEARING ENDED";
+
+        document.getElementById("automaCommand").innerHTML =
+            "CLOSE";
+
+        const link =
+            document.getElementById("urlDisplay");
+
+        link.innerHTML =
+            "NO URL RECEIVED";
+
+        link.href =
+            "#";
+    }
+
+});
+
+function armAutomation(){
+
+    automationArmed = true;
 
     document.getElementById("status").innerHTML =
-        "HEARING STARTED";
-document.getElementById("automaCommand").innerHTML =
-    "OPEN";
-    
-    const link =
-        document.getElementById("urlDisplay");
+        "WAITING FOR COMMAND";
 
-    link.innerHTML =
-        data.url;
-
-    link.href =
-        data.url;
+    document.getElementById("automaCommand").innerHTML =
+        "NONE";
 
 }
 
-if(data.action === "END"){
+function disarmAutomation(){
+
+    automationArmed = false;
 
     document.getElementById("status").innerHTML =
-        "HEARING ENDED";
+        "READY";
 
     document.getElementById("automaCommand").innerHTML =
-    "CLOSE";
-    
+        "NONE";
+
     const link =
         document.getElementById("urlDisplay");
 
@@ -177,68 +219,7 @@ if(data.action === "END"){
 
 }
 
-});
-function armAutomation(){
-
-    automationArmed = true;
-
-    document.getElementById("status").innerHTML =
-        "WAITING FOR COMMAND";
-
-}    
-
-function disarmAutomation(){
-
-    automationArmed = false;
-
-    document.getElementById("status").innerHTML =
-        "READY";
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-
-}
-
-function checkForCommand(){
-
-    if(!automationArmed){
-        return;
-    }
-
-    const currentStatus =
-        document.getElementById("status").innerHTML;
-
-    if(
-        currentStatus === "HEARING STARTED" ||
-        currentStatus === "HEARING ENDED"
-    ){
-        return;
-    }
-
-    document.getElementById("status").innerHTML =
-        "CHECKING FOR COMMAND";
-
-    setTimeout(function(){
-
-        if(automationArmed){
-
-            document.getElementById("status").innerHTML =
-                "WAITING FOR COMMAND";
-
-        }
-
-    },4000);
-
-}
-setInterval(function(){
-
-},5000);
-
-      
 </script>
 
 </body>
-
 </html>
-     
-
