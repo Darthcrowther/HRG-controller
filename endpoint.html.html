@@ -200,13 +200,11 @@ function checkForCommand(){
     document.getElementById("status").innerHTML;
 
 if(
-    currentStatus === "COMMAND RECEIVED" ||
-    currentStatus === "HEARING REQUEST RECEIVED"
+    currentStatus === "HEARING STARTED" ||
+    currentStatus === "HEARING ENDED"
 ){
     return;
-}{
-        return;
-    }
+}
 
     document.getElementById("status").innerHTML =
         "CHECKING FOR COMMAND";
