@@ -136,17 +136,37 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data;
 
+if(data.action === "JOIN"){
+
     document.getElementById("status").innerHTML =
-    "COMMAND RECEIVED";
+        "HEARING STARTED";
 
     const link =
         document.getElementById("urlDisplay");
 
     link.innerHTML =
-        data.url || "NO URL RECEIVED";
+        data.url;
 
     link.href =
-        data.url || "#";
+        data.url;
+
+}
+
+if(data.action === "END"){
+
+    document.getElementById("status").innerHTML =
+        "HEARING ENDED";
+
+    const link =
+        document.getElementById("urlDisplay");
+
+    link.innerHTML =
+        "NO URL RECEIVED";
+
+    link.href =
+        "#";
+
+}
 
 });
 function armAutomation(){
