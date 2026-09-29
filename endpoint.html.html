@@ -94,6 +94,10 @@ Endpoint: EP-001
 READY
 </div>
 
+    <div id="automaCommand" style="display:none;">
+NONE
+</div>
+    
 <a id="urlDisplay"
    class="status"
    href="#"
@@ -140,7 +144,9 @@ if(data.action === "JOIN"){
 
     document.getElementById("status").innerHTML =
         "HEARING STARTED";
-
+document.getElementById("automaCommand").innerHTML =
+    "OPEN";
+    
     const link =
         document.getElementById("urlDisplay");
 
@@ -157,6 +163,9 @@ if(data.action === "END"){
     document.getElementById("status").innerHTML =
         "HEARING ENDED";
 
+    document.getElementById("automaCommand").innerHTML =
+    "CLOSE";
+    
     const link =
         document.getElementById("urlDisplay");
 
