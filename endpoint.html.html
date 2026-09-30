@@ -23,7 +23,7 @@ body{
 
 .panel{
     background:white;
-    width:600px;
+    width:650px;
     max-width:90%;
     margin:40px auto;
     padding:30px;
@@ -31,44 +31,34 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
-.endpoint{
+.status{
     font-size:28px;
     color:#003078;
     font-weight:bold;
     margin-bottom:20px;
 }
 
-.status{
-    font-size:24px;
-    margin:25px 0;
-    color:#003078;
-    font-weight:bold;
-}
-
-#automaCommand{
+.endpoint{
     font-size:20px;
     color:#666;
-    margin:15px 0;
+    margin-bottom:25px;
 }
 
-#urlDisplay{
-    margin:20px auto;
-    padding:12px;
-    border:1px solid #d8d8d8;
-    border-radius:5px;
+.urlBox{
+    border:1px solid #ddd;
     background:#f8f8f8;
-    font-size:16px;
-    color:#003078;
+    padding:15px;
+    border-radius:5px;
+    margin:20px;
     word-break:break-all;
 }
 
 button{
-    width:320px;
-    height:80px;
+    width:300px;
+    height:70px;
+    font-size:22px;
     border:none;
     border-radius:8px;
-    font-size:24px;
-    font-weight:bold;
     cursor:pointer;
     color:white;
     margin:10px;
@@ -78,16 +68,8 @@ button{
     background:#00703c;
 }
 
-.arm:hover{
-    background:#005a30;
-}
-
 .disarm{
     background:#d4351c;
-}
-
-.disarm:hover{
-    background:#b10e1e;
 }
 
 </style>
@@ -99,7 +81,7 @@ button{
 <body>
 
 <div class="header">
-HMCTS ENDPOINT CONTROLLER
+HMCTS ENDPOINT
 </div>
 
 <div class="panel">
@@ -112,107 +94,30 @@ Endpoint: EP-001
 READY
 </div>
 
-<div id="automaCommand">
-NONE
-</div>
-
-<div id="urlDisplay">
+<div id="urlDisplay" class="urlBox">
 NO URL RECEIVED
 </div>
 
 <button
 class="arm"
-onclick="armAutomation()">
-LAUNCH HEARING
+onclick="armEndpoint()">
+ARM ENDPOINT
 </button>
 
 <br>
 
 <button
 class="disarm"
-onclick="disarmAutomation()">
-CANCEL REQUEST
+onclick="disarmEndpoint()">
+DISARM ENDPOINT
 </button>
 
 </div>
 
 <script>
 
-let automationArmed = false;
+let endpointArmed = false;
+let hearingWindow = null;
 
 const ably = new Ably.Realtime(
-    "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
-);
-
-const channel = ably.channels.get("hearings");
-
-alert("ABLY LOADED");
-
-channel.subscribe("hearing", function(message){
-
-    if(!automationArmed){
-        return;
-    }
-
-    const data = message.data || {};
-
-    console.log("MESSAGE RECEIVED:", data);
-
-    if(data.action === "JOIN"){
-
-        document.getElementById("status").innerHTML =
-            "HEARING STARTED";
-
-        document.getElementById("automaCommand").innerHTML =
-            "OPEN";
-
-        document.getElementById("urlDisplay").innerHTML =
-            data.url || "NO URL RECEIVED";
-
-    }
-
-    else if(data.action === "END"){
-
-        document.getElementById("status").innerHTML =
-            "HEARING ENDED";
-
-        document.getElementById("automaCommand").innerHTML =
-            "CLOSE";
-
-        document.getElementById("urlDisplay").innerHTML =
-            "NO URL RECEIVED";
-    }
-
-});
-
-function armAutomation(){
-
-    automationArmed = true;
-
-    document.getElementById("status").innerHTML =
-        "WAITING FOR COMMAND";
-
-    document.getElementById("automaCommand").innerHTML =
-        "NONE";
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-}
-
-function disarmAutomation(){
-
-    automationArmed = false;
-
-    document.getElementById("status").innerHTML =
-        "READY";
-
-    document.getElementById("automaCommand").innerHTML =
-        "NONE";
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-}
-     </script>
-
-</body>
-</html>   
+    "YOUR_ABLY_
