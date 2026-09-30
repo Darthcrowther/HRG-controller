@@ -162,7 +162,24 @@ function endHearing(){
 
     console.log("HEARING CLOSED");
 }
+function testCloseWindow(){
 
+    if(
+        hearingWindow &&
+        !hearingWindow.closed
+    ){
+
+        console.log("CLOSING TAB");
+
+        hearingWindow.close();
+
+        hearingWindow = null;
+    }
+    else{
+
+        console.log("NO TAB FOUND");
+    }
+}
 channel.subscribe("hearing", function(message){
 
     if(!endpointReady){
