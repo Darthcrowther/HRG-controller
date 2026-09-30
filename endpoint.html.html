@@ -83,14 +83,6 @@ button{
     background:#b10e1e;
 }
 
-.test{
-    background:#005ea5;
-}
-
-.test:hover{
-    background:#003078;
-}
-
 </style>
 
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
@@ -127,18 +119,11 @@ LAUNCH HEARING
 END HEARING
 </button>
 
-<br>
-
-<button class="test" onclick="testCloseWindow()">
-TEST CLOSE TAB
-</button>
-
 </div>
 
 <script>
 
 let endpointReady = false;
-let hearingWindow = null;
 
 const ably = new Ably.Realtime(
     "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
@@ -153,10 +138,15 @@ function launchHearing(){
     document.getElementById("status").innerHTML =
         "WAITING FOR HEARING";
 
+    document.getElementById("urlDisplay").innerHTML =
+        "NO URL RECEIVED";
+
     console.log("ENDPOINT READY");
 }
 
 function endHearing(){
+
+    endpointReady = false;
 
     document.getElementById("status").innerHTML =
         "HEARING ENDED";
@@ -164,26 +154,7 @@ function endHearing(){
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
-    if(
-        hearingWindow &&
-        !hearingWindow.closed
-    ){
-        hearingWindow.close();
-    }
-
-    hearingWindow = null;
-    endpointReady = false;
-
-    console.log("HEARING CLOSED");
-}
-
-    else{
-
-        console.log("NO TAB FOUND");
-
-        document.getElementById("status").innerHTML =
-            "NO TAB OPEN";
-    }
+    console.log("HEARING ENDED");
 }
 
 channel.subscribe("hearing", function(message){
@@ -204,46 +175,26 @@ channel.subscribe("hearing", function(message){
         document.getElementById("urlDisplay").innerHTML =
             data.url || "NO URL RECEIVED";
 
-        if(
-            data.url &&
-            (
-                !hearingWindow ||
-                hearingWindow.closed
-            )
-        ){
-hearingWindow = window.open(
-    data.url,
-    "_blank"
-);
+        if(data.url){
 
-console.log("HEARING WINDOW:", hearingWindow);
+            window.open(
+                data.url,
+                "_blank"
+            );
 
-if(hearingWindow){
-    console.log("WINDOW REFERENCE STORED");
-}
-else{
-    console.log("WINDOW REFERENCE NOT STORED");
-}
-   
+            console.log("HEARING OPENED");
         }
     }
 
     if(data.action === "END"){
 
         document.getElementById("status").innerHTML =
-            "WAITING FOR HEARING";
+            "HEARING ENDED";
 
         document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
 
-        if(
-            hearingWindow &&
-            !hearingWindow.closed
-        ){
-            hearingWindow.close();
-        }
-
-        hearingWindow = null;
+        console.log("END COMMAND RECEIVED");
     }
 
 });
