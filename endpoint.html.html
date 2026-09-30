@@ -2,76 +2,138 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HMCTS Endpoint V2</title>
-
-<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+<title>HMCTS Endpoint Controller</title>
 
 <style>
 
 body{
+    margin:0;
+    background:#f3f2f1;
     font-family:Arial,sans-serif;
     text-align:center;
-    background:#f3f2f1;
-    margin:40px;
 }
 
-#status{
+.header{
+    background:#003078;
+    color:white;
+    padding:25px;
     font-size:32px;
     font-weight:bold;
-    margin:20px;
-    color:#003078;
 }
 
-#url{
-    font-size:18px;
-    margin:20px;
-    padding:15px;
-    border:1px solid #ccc;
+.panel{
     background:white;
+    width:650px;
+    max-width:90%;
+    margin:40px auto;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.endpoint{
+    font-size:24px;
+    font-weight:bold;
+    color:#003078;
+    margin-bottom:20px;
+}
+
+.status{
+    font-size:28px;
+    font-weight:bold;
+    color:#003078;
+    margin-bottom:20px;
+}
+
+.urlBox{
+    background:#f8f8f8;
+    border:1px solid #d8d8d8;
+    border-radius:5px;
+    padding:15px;
+    margin:20px;
+    min-height:40px;
+    word-break:break-all;
 }
 
 button{
-    width:300px;
+    width:320px;
     height:80px;
-    margin:10px;
-    font-size:24px;
-    color:white;
     border:none;
     border-radius:8px;
+    font-size:24px;
+    font-weight:bold;
     cursor:pointer;
+    color:white;
+    margin:10px;
 }
 
 .launch{
     background:#00703c;
 }
 
+.launch:hover{
+    background:#005a30;
+}
+
 .end{
     background:#d4351c;
 }
 
+.end:hover{
+    background:#b10e1e;
+}
+
+.test{
+    background:#005ea5;
+}
+
+.test:hover{
+    background:#003078;
+}
+
 </style>
+
+<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 
 </head>
 
 <body>
 
-<h1>HMCTS Endpoint V2</h1>
+<div class="header">
+HMCTS ENDPOINT CONTROLLER
+</div>
 
-<div id="status">
+<div class="panel">
+
+<div class="endpoint">
+Endpoint: EP-001
+</div>
+
+<div id="status" class="status">
 READY
 </div>
 
-<div id="url">
+<div id="urlDisplay" class="urlBox">
 NO URL RECEIVED
 </div>
 
-<button class="launch" onclick="startEndpoint()">
+<button class="launch" onclick="launchHearing()">
 LAUNCH HEARING
 </button>
 
-<button class="end" onclick="stopEndpoint()">
+<br>
+
+<button class="end" onclick="endHearing()">
 END HEARING
 </button>
+
+<br>
+
+<button class="test" onclick="testCloseWindow()">
+TEST CLOSE TAB
+</button>
+
+</div>
 
 <script>
 
@@ -84,37 +146,44 @@ const ably = new Ably.Realtime(
 
 const channel = ably.channels.get("hearings");
 
-function startEndpoint(){
+function launchHearing(){
 
     endpointReady = true;
 
-    document.getElementById("status").innerText =
+    document.getElementById("status").innerHTML =
         "WAITING FOR HEARING";
 
     console.log("ENDPOINT READY");
 }
 
-function stopEndpoint(){
+function endHearing(){
 
-    endpointReady = false;
-
-    document.getElementById("status").innerText =
+    document.getElementById("status").innerHTML =
         "HEARING ENDED";
 
-    document.getElementById("url").innerText =
+    document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
     if(
         hearingWindow &&
         !hearingWindow.closed
     ){
-
         hearingWindow.close();
-
-        console.log("WINDOW CLOSED");
     }
 
     hearingWindow = null;
+    endpointReady = false;
+
+    console.log("HEARING CLOSED");
+}
+
+    else{
+
+        console.log("NO TAB FOUND");
+
+        document.getElementById("status").innerHTML =
+            "NO TAB OPEN";
+    }
 }
 
 channel.subscribe("hearing", function(message){
@@ -125,48 +194,53 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data || {};
 
-    console.log("ABLY MESSAGE", data);
+    console.log("MESSAGE RECEIVED", data);
 
     if(data.action === "JOIN"){
 
-        document.getElementById("status").innerText =
+        document.getElementById("status").innerHTML =
             "HEARING ACTIVE";
 
-        document.getElementById("url").innerText =
+        document.getElementById("urlDisplay").innerHTML =
             data.url || "NO URL RECEIVED";
 
-        hearingWindow = window.open(
-            data.url,
-            "CVP_HEARING",
-            "width=1600,height=1000"
-        );
+        if(
+            data.url &&
+            (
+                !hearingWindow ||
+                hearingWindow.closed
+            )
+        ){
+hearingWindow = window.open(
+    data.url,
+    "_blank"
+);
 
-        console.log(
-            "WINDOW REFERENCE:",
-            hearingWindow
-        );
+console.log("HEARING WINDOW:", hearingWindow);
+
+if(hearingWindow){
+    console.log("WINDOW REFERENCE STORED");
+}
+else{
+    console.log("WINDOW REFERENCE NOT STORED");
+}
+   
+        }
     }
 
     if(data.action === "END"){
 
-        document.getElementById("status").innerText =
+        document.getElementById("status").innerHTML =
             "WAITING FOR HEARING";
 
-        document.getElementById("url").innerText =
+        document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
 
         if(
             hearingWindow &&
             !hearingWindow.closed
         ){
-
             hearingWindow.close();
-
-            console.log("HEARING WINDOW CLOSED");
-        }
-        else{
-
-            console.log("NO WINDOW REFERENCE AVAILABLE");
         }
 
         hearingWindow = null;
