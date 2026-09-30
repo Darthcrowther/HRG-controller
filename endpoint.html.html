@@ -31,45 +31,56 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
-.status{
-    font-size:28px;
-    color:#003078;
+.endpoint{
+    font-size:24px;
     font-weight:bold;
+    color:#003078;
     margin-bottom:20px;
 }
 
-.endpoint{
-    font-size:20px;
-    color:#666;
-    margin-bottom:25px;
+.status{
+    font-size:28px;
+    font-weight:bold;
+    color:#003078;
+    margin-bottom:20px;
 }
 
 .urlBox{
-    border:1px solid #ddd;
     background:#f8f8f8;
-    padding:15px;
+    border:1px solid #d8d8d8;
     border-radius:5px;
+    padding:15px;
     margin:20px;
+    min-height:40px;
     word-break:break-all;
 }
 
 button{
-    width:300px;
-    height:70px;
-    font-size:22px;
+    width:320px;
+    height:80px;
     border:none;
     border-radius:8px;
+    font-size:24px;
+    font-weight:bold;
     cursor:pointer;
     color:white;
     margin:10px;
 }
 
-.arm{
+.launch{
     background:#00703c;
 }
 
-.disarm{
+.launch:hover{
+    background:#005a30;
+}
+
+.end{
     background:#d4351c;
+}
+
+.end:hover{
+    background:#b10e1e;
 }
 
 </style>
@@ -81,7 +92,7 @@ button{
 <body>
 
 <div class="header">
-HMCTS ENDPOINT
+HMCTS ENDPOINT CONTROLLER
 </div>
 
 <div class="panel">
@@ -98,26 +109,114 @@ READY
 NO URL RECEIVED
 </div>
 
-<button
-class="arm"
-onclick="armEndpoint()">
-ARM ENDPOINT
+<button class="launch" onclick="launchHearing()">
+LAUNCH HEARING
 </button>
 
 <br>
 
-<button
-class="disarm"
-onclick="disarmEndpoint()">
-DISARM ENDPOINT
+<button class="end" onclick="endHearing()">
+END HEARING
 </button>
 
 </div>
 
 <script>
 
-let endpointArmed = false;
+let endpointReady = false;
 let hearingWindow = null;
 
 const ably = new Ably.Realtime(
-    "YOUR_ABLY_
+    "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
+);
+
+const channel = ably.channels.get("hearings");
+
+function launchHearing(){
+
+    endpointReady = true;
+
+    document.getElementById("status").innerHTML =
+        "WAITING FOR HEARING";
+
+    console.log("ENDPOINT READY");
+}
+
+function endHearing(){
+
+    document.getElementById("status").innerHTML =
+        "HEARING ENDED";
+
+    document.getElementById("urlDisplay").innerHTML =
+        "NO URL RECEIVED";
+
+    if(
+        hearingWindow &&
+        !hearingWindow.closed
+    ){
+        hearingWindow.close();
+    }
+
+    hearingWindow = null;
+    endpointReady = false;
+
+    console.log("HEARING CLOSED");
+}
+
+channel.subscribe("hearing", function(message){
+
+    if(!endpointReady){
+        return;
+    }
+
+    const data = message.data || {};
+
+    console.log("MESSAGE RECEIVED", data);
+
+    if(data.action === "JOIN"){
+
+        document.getElementById("status").innerHTML =
+            "HEARING ACTIVE";
+
+        document.getElementById("urlDisplay").innerHTML =
+            data.url || "NO URL RECEIVED";
+
+        if(
+            data.url &&
+            (
+                !hearingWindow ||
+                hearingWindow.closed
+            )
+        ){
+
+            hearingWindow = window.open(
+                data.url,
+                "_blank"
+            );
+        }
+    }
+
+    if(data.action === "END"){
+
+        document.getElementById("status").innerHTML =
+            "WAITING FOR HEARING";
+
+        document.getElementById("urlDisplay").innerHTML =
+            "NO URL RECEIVED";
+
+        if(
+            hearingWindow &&
+            !hearingWindow.closed
+        ){
+            hearingWindow.close();
+        }
+
+        hearingWindow = null;
+    }
+
+});
+
+</script>
+
+</body>
+</html>
