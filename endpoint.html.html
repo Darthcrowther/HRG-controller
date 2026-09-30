@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HMCTS Endpoint Controller</title>
+<title>HMCTS - READY</title>
+
+<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 
 <style>
 
@@ -85,8 +87,6 @@ button{
 
 </style>
 
-<script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
-
 </head>
 
 <body>
@@ -124,6 +124,7 @@ END HEARING
 <script>
 
 let endpointReady = false;
+let hearingActive = false;
 
 const ably = new Ably.Realtime(
     "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
@@ -131,12 +132,22 @@ const ably = new Ably.Realtime(
 
 const channel = ably.channels.get("hearings");
 
+function setStatus(status){
+
+    document.getElementById("status").innerHTML =
+        status;
+
+    document.title =
+        "HMCTS - " + status;
+}
+
 function launchHearing(){
 
     endpointReady = true;
 
-    document.getElementById("status").innerHTML =
-        "WAITING FOR HEARING";
+    hearingActive = false;
+
+    setStatus("WAITING FOR HEARING");
 
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
@@ -148,13 +159,14 @@ function endHearing(){
 
     endpointReady = false;
 
-    document.getElementById("status").innerHTML =
-        "HEARING ENDED";
+    hearingActive = false;
+
+    setStatus("HEARING ENDED");
 
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
-    console.log("HEARING ENDED");
+    console.log("MANUAL END");
 }
 
 channel.subscribe("hearing", function(message){
@@ -169,8 +181,13 @@ channel.subscribe("hearing", function(message){
 
     if(data.action === "JOIN"){
 
-        document.getElementById("status").innerHTML =
-            "HEARING ACTIVE";
+        if(hearingActive){
+            return;
+        }
+
+        hearingActive = true;
+
+        setStatus("HEARING ACTIVE");
 
         document.getElementById("urlDisplay").innerHTML =
             data.url || "NO URL RECEIVED";
@@ -188,8 +205,9 @@ channel.subscribe("hearing", function(message){
 
     if(data.action === "END"){
 
-        document.getElementById("status").innerHTML =
-            "HEARING ENDED";
+        hearingActive = false;
+
+        setStatus("HEARING ENDED");
 
         document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
