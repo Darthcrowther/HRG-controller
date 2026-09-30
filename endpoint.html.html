@@ -227,11 +227,20 @@ channel.subscribe("hearing", function(message){
                 hearingWindow.closed
             )
         ){
+hearingWindow = window.open(
+    data.url,
+    "_blank"
+);
 
-            hearingWindow = window.open(
-                data.url,
-                "_blank"
-            );
+console.log("HEARING WINDOW:", hearingWindow);
+
+if(hearingWindow){
+    console.log("WINDOW REFERENCE STORED");
+}
+else{
+    console.log("WINDOW REFERENCE NOT STORED");
+}
+   
         }
     }
 
