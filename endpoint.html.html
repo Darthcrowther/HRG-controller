@@ -83,6 +83,14 @@ button{
     background:#b10e1e;
 }
 
+.test{
+    background:#005ea5;
+}
+
+.test:hover{
+    background:#003078;
+}
+
 </style>
 
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
@@ -117,6 +125,12 @@ LAUNCH HEARING
 
 <button class="end" onclick="endHearing()">
 END HEARING
+</button>
+
+<br>
+
+<button class="test" onclick="testCloseWindow()">
+TEST CLOSE TAB
 </button>
 
 </div>
@@ -162,6 +176,7 @@ function endHearing(){
 
     console.log("HEARING CLOSED");
 }
+
 function testCloseWindow(){
 
     if(
@@ -174,12 +189,19 @@ function testCloseWindow(){
         hearingWindow.close();
 
         hearingWindow = null;
+
+        document.getElementById("status").innerHTML =
+            "TAB CLOSED";
     }
     else{
 
         console.log("NO TAB FOUND");
+
+        document.getElementById("status").innerHTML =
+            "NO TAB OPEN";
     }
 }
+
 channel.subscribe("hearing", function(message){
 
     if(!endpointReady){
