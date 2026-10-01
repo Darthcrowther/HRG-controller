@@ -101,8 +101,12 @@ HMCTS ENDPOINT CONTROLLER
 Endpoint: EP-001
 </div>
 
-<div id="status" class="status">
+<<div id="status" class="status">
 READY
+</div>
+
+<div id="automationCommand" style="display:none;">
+NONE
 </div>
 
 <div id="urlDisplay" class="urlBox">
@@ -174,6 +178,12 @@ channel.subscribe("hearing", function(message){
     if(!endpointReady){
         return;
     }
+    function setCommand(command){
+
+    document.getElementById("automationCommand").innerHTML =
+        command;
+
+}
 
     const data = message.data || {};
 
