@@ -210,11 +210,14 @@ channel.subscribe("hearing", function(message){
 
         if(data.url){
 
-            window.open(
-                data.url,
-                "CVP_WINDOW",
-                "popup=yes,width=1400,height=900,left=100,top=100"
-            );
+    window.open(
+        data.url,
+        "_blank"
+    );
+
+    console.log("HEARING OPENED");
+}
+``
 
             console.log("HEARING OPENED");
         }
