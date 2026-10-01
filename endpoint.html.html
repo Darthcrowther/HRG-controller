@@ -144,7 +144,11 @@ function setStatus(status){
     document.title =
         "HMCTS - " + status;
 }
+function setCommand(command){
 
+    document.getElementById("automationCommand").innerHTML =
+        command;
+}
 function launchHearing(){
 
     endpointReady = true;
