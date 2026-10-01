@@ -69,11 +69,11 @@ button{
     margin:10px;
 }
 
-.launch{
+.start{
     background:#00703c;
 }
 
-.launch:hover{
+.start:hover{
     background:#005a30;
 }
 
@@ -113,8 +113,8 @@ NONE
 NO URL RECEIVED
 </div>
 
-<button class="launch" onclick="launchHearing()">
-LAUNCH HEARING
+<button class="start" onclick="startHearing()">
+START HEARING
 </button>
 
 <br>
@@ -138,20 +138,17 @@ const channel = ably.channels.get("hearings");
 
 function setStatus(status){
 
-    document.getElementById("status").innerHTML =
-        status;
+    document.getElementById("status").innerHTML = status;
 
-    document.title =
-        "HMCTS - " + status;
+    document.title = "HMCTS - " + status;
 }
 
 function setCommand(command){
 
-    document.getElementById("automationCommand").innerHTML =
-        command;
+    document.getElementById("automationCommand").innerHTML = command;
 }
 
-function launchHearing(){
+function startHearing(){
 
     endpointReady = true;
 
@@ -210,14 +207,10 @@ channel.subscribe("hearing", function(message){
 
         if(data.url){
 
-    window.open(
-        data.url,
-        "_blank"
-    );
-
-    console.log("HEARING OPENED");
-}
-``
+            window.open(
+                data.url,
+                "_blank"
+            );
 
             console.log("HEARING OPENED");
         }
