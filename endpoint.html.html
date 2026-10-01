@@ -101,7 +101,7 @@ HMCTS ENDPOINT CONTROLLER
 Endpoint: EP-001
 </div>
 
-<<div id="status" class="status">
+<div id="status" class="status">
 READY
 </div>
 
@@ -144,11 +144,13 @@ function setStatus(status){
     document.title =
         "HMCTS - " + status;
 }
+
 function setCommand(command){
 
     document.getElementById("automationCommand").innerHTML =
         command;
 }
+
 function launchHearing(){
 
     endpointReady = true;
@@ -156,6 +158,8 @@ function launchHearing(){
     hearingActive = false;
 
     setStatus("WAITING FOR HEARING");
+
+    setCommand("NONE");
 
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
@@ -171,6 +175,8 @@ function endHearing(){
 
     setStatus("HEARING ENDED");
 
+    setCommand("END");
+
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
@@ -182,12 +188,6 @@ channel.subscribe("hearing", function(message){
     if(!endpointReady){
         return;
     }
-    function setCommand(command){
-
-    document.getElementById("automationCommand").innerHTML =
-        command;
-
-}
 
     const data = message.data || {};
 
@@ -203,16 +203,18 @@ channel.subscribe("hearing", function(message){
 
         setStatus("HEARING ACTIVE");
 
+        setCommand("JOIN");
+
         document.getElementById("urlDisplay").innerHTML =
             data.url || "NO URL RECEIVED";
 
         if(data.url){
 
-   window.open(
-    data.url,
-    "CVP_WINDOW",
-    "popup=yes,width=1400,height=900,left=100,top=100"
-);
+            window.open(
+                data.url,
+                "CVP_WINDOW",
+                "popup=yes,width=1400,height=900,left=100,top=100"
+            );
 
             console.log("HEARING OPENED");
         }
@@ -223,6 +225,8 @@ channel.subscribe("hearing", function(message){
         hearingActive = false;
 
         setStatus("HEARING ENDED");
+
+        setCommand("END");
 
         document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
