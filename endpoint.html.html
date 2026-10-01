@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HMCTS - READY</title>
+<title>HMCTS Endpoint</title>
 
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 
@@ -18,54 +18,43 @@ body{
 .header{
     background:#003078;
     color:white;
-    padding:25px;
-    font-size:32px;
+    padding:20px;
+    font-size:30px;
     font-weight:bold;
 }
 
 .panel{
     background:white;
-    width:650px;
+    width:700px;
     max-width:90%;
     margin:40px auto;
     padding:30px;
     border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-}
-
-.endpoint{
-    font-size:24px;
-    font-weight:bold;
-    color:#003078;
-    margin-bottom:20px;
 }
 
 .status{
-    font-size:28px;
+    font-size:32px;
     font-weight:bold;
     color:#003078;
     margin-bottom:20px;
 }
 
 .urlBox{
-    background:#f8f8f8;
-    border:1px solid #d8d8d8;
-    border-radius:5px;
+    border:1px solid #ccc;
     padding:15px;
-    margin:20px;
     min-height:40px;
+    margin-bottom:20px;
     word-break:break-all;
 }
 
 button{
-    width:320px;
-    height:80px;
+    width:300px;
+    height:70px;
     border:none;
     border-radius:8px;
-    font-size:24px;
-    font-weight:bold;
-    cursor:pointer;
     color:white;
+    font-size:22px;
+    cursor:pointer;
     margin:10px;
 }
 
@@ -73,21 +62,13 @@ button{
     background:#00703c;
 }
 
-.launch:hover{
-    background:#005a30;
-}
-
 .end{
     background:#d4351c;
 }
 
-.end:hover{
-    background:#b10e1e;
-}
-
 </style>
-</head>
 
+</head>
 <body>
 
 <div class="header">
@@ -95,10 +76,6 @@ HMCTS ENDPOINT CONTROLLER
 </div>
 
 <div class="panel">
-
-<div class="endpoint">
-Endpoint: EP-001
-</div>
 
 <div id="status" class="status">
 READY
@@ -112,13 +89,11 @@ NONE
 NO URL RECEIVED
 </div>
 
-<button class="launch" onclick="launchHearing()">
-LAUNCH HEARING
+<button class="launch" onclick="armEndpoint()">
+ARM ENDPOINT
 </button>
 
-<br>
-
-<button class="end" onclick="endHearing()">
+<button class="end" onclick="manualEnd()">
 END HEARING
 </button>
 
@@ -127,76 +102,73 @@ END HEARING
 <script>
 
 let endpointReady = false;
-let hearingActive = false;
-let cvpWindow = null;
+let hearingWindow = null;
+
+function setStatus(text){
+    document.getElementById("status").innerText = text;
+}
+
+function setCommand(text){
+    document.getElementById("automationCommand").innerText = text;
+}
+
+function armEndpoint(){
+
+    endpointReady = true;
+
+    setStatus("WAITING FOR HEARING");
+    setCommand("NONE");
+
+    console.log("ENDPOINT ARMED");
+}
+
+function openHearing(url){
+
+    if(hearingWindow && !hearingWindow.closed){
+        return;
+    }
+
+    hearingWindow = window.open(
+        url,
+        "_blank"
+    );
+
+    setStatus("HEARING ACTIVE");
+    setCommand("JOIN");
+
+    console.log("HEARING OPENED");
+}
+
+function closeHearing(){
+
+    setStatus("HEARING ENDED");
+    setCommand("END");
+
+    try{
+
+        if(hearingWindow && !hearingWindow.closed){
+
+            hearingWindow.close();
+
+            console.log("HEARING WINDOW CLOSED");
+        }
+
+    }catch(err){
+
+        console.log("CLOSE FAILED", err);
+    }
+}
+
+function manualEnd(){
+
+    closeHearing();
+}
 
 const ably = new Ably.Realtime(
     "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
 );
 
 const channel = ably.channels.get("hearings");
-
-function setStatus(status){
-
-    document.getElementById("status").innerHTML =
-        status;
-
-    document.title =
-        "HMCTS - " + status;
-}
-
-function setCommand(command){
-
-    document.getElementById("automationCommand").innerHTML =
-        command;
-}
-
-function launchHearing(){
-
-    endpointReady = true;
-
-    hearingActive = false;
-
-    setStatus("WAITING FOR HEARING");
-
-    setCommand("NONE");
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-
-    console.log("ENDPOINT READY");
-}
-
-function endHearing(){
-
-    endpointReady = false;
-
-    hearingActive = false;
-
-    setStatus("HEARING ENDED");
-
-    setCommand("END");
-
-    if(cvpWindow && !cvpWindow.closed){
-
-        try{
-
-            cvpWindow.close();
-
-            console.log("CVP WINDOW CLOSED");
-
-        }catch(err){
-
-            console.log("UNABLE TO CLOSE CVP WINDOW", err);
-
-        }
-    }
-
-    document.getElementById("urlDisplay").innerHTML =
-        "NO URL RECEIVED";
-
-    console.log("MANUAL END");
-}
 
 channel.subscribe("hearing", function(message){
 
@@ -206,57 +178,22 @@ channel.subscribe("hearing", function(message){
 
     const data = message.data || {};
 
-    console.log("MESSAGE RECEIVED", data);
+    console.log("MESSAGE", data);
 
     if(data.action === "JOIN"){
 
-        if(hearingActive){
-            return;
-        }
-
-        hearingActive = true;
-
-        setStatus("HEARING ACTIVE");
-
-        setCommand("JOIN");
-
-        document.getElementById("urlDisplay").innerHTML =
+        document.getElementById("urlDisplay").innerText =
             data.url || "NO URL RECEIVED";
 
-        if(data.url){
-
-          window.location.href = data.url;
-            console.log("HEARING OPENED");
-        }
+        openHearing(data.url);
     }
 
     if(data.action === "END"){
 
-        hearingActive = false;
+        closeHearing();
 
-        setStatus("HEARING ENDED");
-
-        setCommand("END");
-
-        if(cvpWindow && !cvpWindow.closed){
-
-            try{
-
-                cvpWindow.close();
-
-                console.log("CVP WINDOW CLOSED");
-
-            }catch(err){
-
-                console.log("UNABLE TO CLOSE CVP WINDOW", err);
-
-            }
-        }
-
-        document.getElementById("urlDisplay").innerHTML =
+        document.getElementById("urlDisplay").innerText =
             "NO URL RECEIVED";
-
-        console.log("END COMMAND RECEIVED");
     }
 
 });
