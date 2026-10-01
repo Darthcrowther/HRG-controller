@@ -86,7 +86,6 @@ button{
 }
 
 </style>
-
 </head>
 
 <body>
@@ -129,6 +128,7 @@ END HEARING
 
 let endpointReady = false;
 let hearingActive = false;
+let cvpWindow = null;
 
 const ably = new Ably.Realtime(
     "rLuvXQ.hsU1zg:lupB30Cvln6FU__Lkk-aRWKyHCGnZ5cqV_Sp9MD4LP4"
@@ -177,6 +177,21 @@ function endHearing(){
 
     setCommand("END");
 
+    if(cvpWindow && !cvpWindow.closed){
+
+        try{
+
+            cvpWindow.close();
+
+            console.log("CVP WINDOW CLOSED");
+
+        }catch(err){
+
+            console.log("UNABLE TO CLOSE CVP WINDOW", err);
+
+        }
+    }
+
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
@@ -210,7 +225,7 @@ channel.subscribe("hearing", function(message){
 
         if(data.url){
 
-            window.open(
+            cvpWindow = window.open(
                 data.url,
                 "CVP_WINDOW",
                 "popup=yes,width=1400,height=900,left=100,top=100"
@@ -227,6 +242,21 @@ channel.subscribe("hearing", function(message){
         setStatus("HEARING ENDED");
 
         setCommand("END");
+
+        if(cvpWindow && !cvpWindow.closed){
+
+            try{
+
+                cvpWindow.close();
+
+                console.log("CVP WINDOW CLOSED");
+
+            }catch(err){
+
+                console.log("UNABLE TO CLOSE CVP WINDOW", err);
+
+            }
+        }
 
         document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
