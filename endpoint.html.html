@@ -109,6 +109,9 @@ READY
 NONE
 </div>
 
+    <div id="hearingPin" style="display:none;">
+</div>
+    
 <div id="urlDisplay" class="urlBox">
 NO URL RECEIVED
 </div>
@@ -202,8 +205,11 @@ channel.subscribe("hearing", function(message){
 
         setCommand("JOIN");
 
-        document.getElementById("urlDisplay").innerHTML =
-            data.url || "NO URL RECEIVED";
+document.getElementById("hearingPin").innerHTML =
+    data.pin || "";
+
+document.getElementById("urlDisplay").innerHTML =
+    data.url || "NO URL RECEIVED";
 
         if(data.url){
 
