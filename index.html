@@ -113,6 +113,24 @@ Not Supplied
 </span>
 </div>
 
+<div class="info">
+<b>PIN</b>
+<br><br>
+
+<input
+    id="pinValue"
+    type="text"
+    placeholder="Enter PIN"
+    style="
+        width:300px;
+        height:50px;
+        text-align:center;
+        font-size:24px;
+        border:1px solid #d8d8d8;
+        border-radius:5px;
+    ">
+</div>
+    
 <div id="status" class="status">
 READY
 </div>
@@ -198,14 +216,18 @@ function startHearing(){
 
     }
 
-    channel.publish(
-        "hearing",
-        {
-            endpoint: endpoint,
-            action: "JOIN",
-            url: meetingURL
-        }
-    );
+  const hearingPin =
+    document.getElementById("pinValue").value;
+
+channel.publish(
+    "hearing",
+    {
+        endpoint: endpoint,
+        action: "JOIN",
+        url: meetingURL,
+        pin: hearingPin
+    }
+);
 
     hearingWindow =
         window.open(
