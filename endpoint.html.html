@@ -57,6 +57,17 @@ body{
     word-break:break-all;
 }
 
+.pinBox{
+    margin:20px;
+}
+
+.pinBox input{
+    width:200px;
+    height:40px;
+    font-size:20px;
+    text-align:center;
+}
+
 button{
     width:320px;
     height:80px;
@@ -109,13 +120,15 @@ READY
 NONE
 </div>
 
-<input
-    id="hearingPin"
-    type="password"
-    readonly
-    value=""
-    style="width:200px;display:none;">
-    
+<div class="pinBox">
+    PIN:
+    <input
+        id="hearingPin"
+        type="text"
+        readonly
+        value="">
+</div>
+
 <div id="urlDisplay" class="urlBox">
 NO URL RECEIVED
 </div>
@@ -168,6 +181,8 @@ function startHearing(){
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
+    document.getElementById("hearingPin").value = "";
+
     console.log("ENDPOINT READY");
 }
 
@@ -183,6 +198,8 @@ function endHearing(){
 
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
+
+    document.getElementById("hearingPin").value = "";
 
     console.log("MANUAL END");
 }
@@ -209,11 +226,11 @@ channel.subscribe("hearing", function(message){
 
         setCommand("JOIN");
 
-document.getElementById("hearingPin").value =
-    data.pin || "";
+        document.getElementById("hearingPin").value =
+            data.pin || "";
 
-document.getElementById("urlDisplay").innerHTML =
-    data.url || "NO URL RECEIVED";
+        document.getElementById("urlDisplay").innerHTML =
+            data.url || "NO URL RECEIVED";
 
         if(data.url){
 
@@ -236,6 +253,8 @@ document.getElementById("urlDisplay").innerHTML =
 
         document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
+
+        document.getElementById("hearingPin").value = "";
 
         console.log("END COMMAND RECEIVED");
     }
