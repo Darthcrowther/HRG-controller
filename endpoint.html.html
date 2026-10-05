@@ -57,15 +57,15 @@ body{
     word-break:break-all;
 }
 
-.pinBox{
+.roomCode{
     margin:20px;
-}
-
-.pinBox input{
-    width:200px;
-    height:40px;
-    font-size:20px;
-    text-align:center;
+    padding:10px;
+    border:1px solid #d8d8d8;
+    border-radius:5px;
+    background:#f8f8f8;
+    color:#666;
+    font-size:16px;
+    min-height:20px;
 }
 
 button{
@@ -120,16 +120,11 @@ READY
 NONE
 </div>
 
-<div class="pinBox">
-    PIN:
-    <input
-        id="hearingPin"
-        type="text"
-        value="">
-</div>
-
 <div id="urlDisplay" class="urlBox">
 NO URL RECEIVED
+</div>
+
+<div id="roomCode" class="roomCode">
 </div>
 
 <button class="start" onclick="startHearing()">
@@ -180,7 +175,7 @@ function startHearing(){
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
-    document.getElementById("hearingPin").value = "";
+    document.getElementById("roomCode").innerHTML = "";
 
     console.log("ENDPOINT READY");
 }
@@ -198,7 +193,7 @@ function endHearing(){
     document.getElementById("urlDisplay").innerHTML =
         "NO URL RECEIVED";
 
-    document.getElementById("hearingPin").value = "";
+    document.getElementById("roomCode").innerHTML = "";
 
     console.log("MANUAL END");
 }
@@ -225,7 +220,7 @@ channel.subscribe("hearing", function(message){
 
         setCommand("JOIN");
 
-        document.getElementById("hearingPin").value =
+        document.getElementById("roomCode").innerHTML =
             data.pin || "";
 
         document.getElementById("urlDisplay").innerHTML =
@@ -253,7 +248,7 @@ channel.subscribe("hearing", function(message){
         document.getElementById("urlDisplay").innerHTML =
             "NO URL RECEIVED";
 
-        document.getElementById("hearingPin").value = "";
+        document.getElementById("roomCode").innerHTML = "";
 
         console.log("END COMMAND RECEIVED");
     }
